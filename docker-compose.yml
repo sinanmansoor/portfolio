@@ -11,11 +11,17 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-portfolio} -d ${DB_NAME:-portfolio}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   web:
     build: .
     container_name: portfolio_web
-    restart: unless-stopped
+    restart: on-failure
     command: sh -c "python manage.py migrate --noinput && gunicorn portfolio_ai.wsgi:application --bind 0.0.0.0:8000 --workers 3"
     environment:
       USE_SQLITE: 'False'
@@ -29,7 +35,8 @@ services:
       DB_HOST: ${DB_HOST:-db}
       DB_PORT: ${DB_PORT:-5432}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     ports:
       - "8000:8000"
     volumes:
@@ -40,7 +47,8 @@ services:
     container_name: portfolio_nginx
     restart: unless-stopped
     depends_on:
-      - web
+      web:
+        condition: service_started
     ports:
       - "80:80"
       - "443:443"
