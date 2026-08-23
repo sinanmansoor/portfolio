@@ -15,8 +15,8 @@ class Command(BaseCommand):
 
         profile = Profile.objects.create(
             name='MOHAMMED SINAN MANSOOR',
-            headline='AI Engineer and Python Developer',
-            summary='AI Engineer and Python Developer (2026 graduate) skilled in machine learning model training, model deployment, data science, NLP, computer vision, and deep learning. Built production-ready AI applications using Python, Django, TensorFlow, scikit-learn, and REST API development. Applied supervised learning and unsupervised learning at NIT Calicut. IIT Kharagpur certified — top 10% nationally. Seeking a Machine Learning Engineer / ML Engineer / AI Engineer role to deliver data-driven, intelligent, scalable systems through analytical problem solving.',
+            headline='AI Engineer • Applied ML & Product Systems',
+            summary='I build AI systems with a practical engineering lens—combining machine learning, backend development, and product thinking to create tools that are useful, measurable, and reliable in deployment. My work spans NLP, computer vision, deep learning, and Python-based product development, with a focus on real-world impact rather than isolated experimentation.',
             location='Bangalore, India',
             email='sinanmansooor@gmail.com',
             github_url='https://github.com/sinanmansoor',

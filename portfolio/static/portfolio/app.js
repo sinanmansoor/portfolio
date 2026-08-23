@@ -4,6 +4,8 @@ const messageInput = document.getElementById('messageInput');
 const quickPrompts = document.querySelectorAll('.quick-prompt');
 const voiceButton = document.querySelector('.voice-btn');
 const revealItems = document.querySelectorAll('.reveal');
+const menuButton = document.querySelector('.menu-button');
+const mobileNavPanel = document.getElementById('mobileNavPanel');
 
 let voiceListening = false;
 let speechRecognition = null;
@@ -218,5 +220,22 @@ if (voiceButton) {
     voiceButton.dataset.voiceEnabled = 'false';
     voiceButton.textContent = 'Voice';
     speechRecognition.stop();
+  });
+}
+
+if (menuButton && mobileNavPanel) {
+  menuButton.addEventListener('click', () => {
+    const isOpen = menuButton.getAttribute('aria-expanded') === 'true';
+    menuButton.setAttribute('aria-expanded', String(!isOpen));
+    mobileNavPanel.classList.toggle('open', !isOpen);
+    mobileNavPanel.setAttribute('aria-hidden', String(isOpen));
+  });
+
+  mobileNavPanel.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => {
+      menuButton.setAttribute('aria-expanded', 'false');
+      mobileNavPanel.classList.remove('open');
+      mobileNavPanel.setAttribute('aria-hidden', 'true');
+    });
   });
 }

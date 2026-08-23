@@ -16,7 +16,6 @@
     <div class="page-shell">
       <header class="topbar">
         <div class="brand-wrap">
-          <div class="brand-mark">AI</div>
         </div>
 
         <nav class="topnav" aria-label="Main navigation">
@@ -26,23 +25,32 @@
           <a href="#contact">Contact</a>
         </nav>
 
-        <button class="menu-button" aria-label="Open menu">
+        <button class="menu-button" aria-label="Open menu" aria-expanded="false">
           <span></span>
           <span></span>
           <span></span>
         </button>
       </header>
 
+      <div class="mobile-nav-panel" id="mobileNavPanel" aria-hidden="true">
+        <nav class="mobile-nav" aria-label="Mobile navigation">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+        </nav>
+      </div>
+
       <main class="page-main">
         <section class="hero-section" id="about">
           <div class="hero-copy reveal">
-            <div class="hero-badge">Personal AI assistant</div>
+            <div class="hero-badge">AI engineer • personal portfolio</div>
             <h1>
-              Build a portfolio that feels like a product,
-              <span>not a document.</span>
+                I build AI systems<br>
+                <span>that work in the real world.</span>
             </h1>
             <p class="hero-summary">
-              {{ profile.summary|default:'I design and ship AI-driven systems for real-world impact, combining Python, Django, ML workflows, and product thinking to build useful, measurable technology.' }}
+                {{ profile.summary|default:'I design and ship AI systems across machine learning, backend engineering, and product thinking—building tools that are useful, measurable, and reliable in practice.' }}
             </p>
 
             <div class="hero-actions">
@@ -106,18 +114,18 @@
         <section class="feature-grid reveal">
           <article class="feature-card">
             <span class="feature-label">Role fit</span>
-            <h3>AI-first thinker</h3>
-            <p>Builder with a strong mix of Python engineering, applied ML, and product execution.</p>
+            <h3>Applied AI engineering</h3>
+            <p>Building with Python, ML systems, and product context to create solutions that are technically solid and business-aware.</p>
           </article>
           <article class="feature-card">
             <span class="feature-label">Systems</span>
-            <h3>Research to deployment</h3>
-            <p>From model experiments to production-ready APIs and intelligent products.</p>
+            <h3>From prototype to product</h3>
+            <p>Working across experimentation, backend integration, evaluation, and deployment with a practical engineering mindset.</p>
           </article>
           <article class="feature-card">
             <span class="feature-label">Impact</span>
-            <h3>Measurable outcomes</h3>
-            <p>Focused on business value, performance, and real-world usability.</p>
+            <h3>Outcome-driven execution</h3>
+            <p>Focused on reliability, performance, and measurable value rather than superficial demos or empty buzzwords.</p>
           </article>
         </section>
 
