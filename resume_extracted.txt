@@ -1,0 +1,43 @@
+MOHAMMED SINAN MANSOOR
++91-9746951354⋄Bangalore
+sinanmansooor@gmail.com·linkedin.com/in/sinanmansoor·github.com/sinanmansoor
+PROFESSIONAL SUMMAR Y
+AI Engineer and Python Developer (2026 graduate) skilled in machine learning model training, model deployment, data science, NLP, computer
+vision, and deep learning. Built production-ready AI applications using Python, Django, TensorFlow, scikit-learn, and REST API development.
+Applied supervised learning and unsupervised learning at NIT Calicut. IIT Kharagpur certified — top 10% nationally. Seeking an Machine
+Learning Engineer / ML Engineer / AI Engineer role to deliver data-driven, intelligent, scalable systems through analytical problem solving.
+TECHNICAL SKILLS
+LanguagesPython, SQL, JavaScript, HTML, CSS, C, C++
+AI / MLscikit-learn, TensorFlow, Keras, OpenCV, NLTK, Neural Networks, Transformers
+ConceptsAgentic AI, RAG, LangChain, Supervised Learning, Unsupervised Learning, Data Preprocessing, Model Evaluation
+FrameworksDjango, REST API Development, Streamlit
+Data & ToolsPandas, NumPy, MySQL, Git, Jupyter, Linux
+WORK EXPERIENCE
+Machine Learning Research Intern Sep 2025 – Nov 2025
+National Institute of Technology (NIT) Calicut Kerala, India
+•Applied supervised learning algorithms and neural network models in Python for civil engineering data analysis; reduced manual estimation
+time by40%through intelligent automation.
+•Built data preprocessing, feature engineering, and regression pipelines; improved model evaluation accuracy by15%using cross-validation
+and performance benchmarking.
+PROJECTS
+AI Placement Co-Pilot(Vizuara AI Residency) — Production-ready, data-driven artificial intelligence web application usingPython,
+Django, REST API development, HTML, CSS, JavaScript. Implemented 5-step pipeline: role-fit scoring, skill-gap detection, and
+automated ATS resume generation. Integrated LLaMA-3.3-70B large language model for real-time inference;deployed end-to-end.
+Emotional Assistant Bot(Major Project) — Multimodal deep learning system in Python fusing audio & video streams for real-time
+emotion detection and classification. Neural network transformer architecture trained via supervised learning achieves20%+accuracy gain
+over single-modality baselines.
+Agri Bot — Multilingual Voice Assistant— Python natural language processing (NLP) and speech recognition application (ASR +
+TTS pipeline) enabling agricultural data queries in native languages. Data analysis on usage patterns;deployedand serving∼500 users.
+ML Intrusion Detection System— Trained and evaluated a machine learning classification algorithm (Random Forest) on network traffic
+data; achieved97%+ detection accuracywith<2% false-positive rate using model evaluation and cross-validation.
+Emotion-Driven Music Player— Computer vision application using OpenCV and neural network-based facial recognition to classify 7
+emotion states at89% accuracy; real-time data-driven playlist automation.
+ACHIEVEMENTS
+•Top 10% nationally— Merit Certificate certification, IIT Kharagpur (AI, deep learning, performance optimization of ML models, data
+science).
+•Competitively selectedfor NIT Calicut machine learning research internship from a national applicant pool based on demonstrated
+Python and ML aptitude.
+EDUCA TION
+Bachelor of Engineering — Artificial Intelligence & Machine Learning, Yenepoya Institute of Technology Oct 2022 – May 2026
+Hands-on AI for Real-world Applications, IIT Kharagpur Jul – Oct 2024
+Merit Certificate — ranked top 10% of all participants nationwide.

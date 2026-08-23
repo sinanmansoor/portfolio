@@ -1,0 +1,273 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050505" />
+    <title>{{ profile.name|default:'Your Name' }} | AI Portfolio</title>
+    <meta name="description" content="AI portfolio assistant for {{ profile.name|default:'Your Name' }}, showcasing projects, skills, and experience." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="{% static 'portfolio/styles.css' %}" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">AI</div>
+        </div>
+
+        <nav class="topnav" aria-label="Main navigation">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <button class="menu-button" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      <main class="page-main">
+        <section class="hero-section" id="about">
+          <div class="hero-copy reveal">
+            <div class="hero-badge">Personal AI assistant</div>
+            <h1>
+              Build a portfolio that feels like a product,
+              <span>not a document.</span>
+            </h1>
+            <p class="hero-summary">
+              {{ profile.summary|default:'I design and ship AI-driven systems for real-world impact, combining Python, Django, ML workflows, and product thinking to build useful, measurable technology.' }}
+            </p>
+
+            <div class="hero-actions">
+              <a class="primary-btn" href="{{ profile.resume_url|default:'#' }}" target="_blank" rel="noreferrer">View resume</a>
+              <a class="secondary-btn" href="mailto:{{ profile.email|default:'hello@example.com' }}">Contact</a>
+            </div>
+
+            <div class="hero-metadata">
+              <span>{{ profile.location|default:'Bangalore, India' }}</span>
+              <span>{{ profile.availability|default:'Open to AI / ML roles' }}</span>
+            </div>
+          </div>
+
+          <div class="agent-preview reveal" aria-label="AI assistant panel preview">
+            <div class="assistant-panel">
+              <div class="assistant-topline">
+                <div class="assistant-live">
+                  <span class="live-dot"></span>
+                  AI assistant live
+                </div>
+                <button class="voice-btn" type="button">Voice</button>
+              </div>
+
+              <div id="chatMessages" class="chat-messages">
+                <div class="message-row bot">
+                  <div class="message-label">AI</div>
+                  <div class="bubble bot">
+                    Hello! I’m {{ profile.name|default:'Your Name' }}’s personal assistant. Ask me about my background, projects, and fit for AI roles.
+                  </div>
+                </div>
+              </div>
+
+              <div class="quick-prompt-grid">
+                <button class="quick-prompt" type="button">About me</button>
+                <button class="quick-prompt" type="button">Projects</button>
+                <button class="quick-prompt" type="button">Skills</button>
+                <button class="quick-prompt" type="button">Why hire me</button>
+              </div>
+
+              <form id="chatForm" class="chat-form">
+                <input id="messageInput" type="text" placeholder="Ask about my background..." aria-label="Ask the assistant" />
+                <button type="submit">Ask</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <section class="ticker-wrap reveal">
+          <div class="ticker-track">
+            <span>AI Engineer</span>
+            <span>Python Developer</span>
+            <span>ML Systems</span>
+            <span>NLP</span>
+            <span>Computer Vision</span>
+            <span>Deep Learning</span>
+            <span>Large Language Models</span>
+            <span>AI Product Building</span>
+          </div>
+        </section>
+
+        <section class="feature-grid reveal">
+          <article class="feature-card">
+            <span class="feature-label">Role fit</span>
+            <h3>AI-first thinker</h3>
+            <p>Builder with a strong mix of Python engineering, applied ML, and product execution.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-label">Systems</span>
+            <h3>Research to deployment</h3>
+            <p>From model experiments to production-ready APIs and intelligent products.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-label">Impact</span>
+            <h3>Measurable outcomes</h3>
+            <p>Focused on business value, performance, and real-world usability.</p>
+          </article>
+        </section>
+
+        <section class="summary-panel reveal">
+          <div class="summary-copy">
+            <span class="section-label">Profile</span>
+            <h3>{{ profile.headline|default:'AI Engineer and Python Developer.' }}</h3>
+          </div>
+          <div class="summary-meta">
+            <span>{{ profile.location|default:'Bangalore, India' }}</span>
+            <span>{{ profile.availability|default:'Open to AI Engineer / ML Engineer roles' }}</span>
+            <span>{{ profile.work_style|default:'Research-driven, execution-focused, strong in Python, AI systems, and deployment workflows.' }}</span>
+          </div>
+        </section>
+
+        <section class="content-columns reveal" id="projects">
+          <div class="content-block projects-block">
+            <div class="section-topline">
+              <span class="section-label">Selected work</span>
+            </div>
+
+            {% for project in featured_projects %}
+              <article class="project-item">
+                <div class="project-head">
+                  <span class="project-tag">{{ project.category }}</span>
+                  {% if project.featured %}<span class="project-featured">Featured</span>{% endif %}
+                </div>
+                <h4>{{ project.title }}</h4>
+                <p>{{ project.summary }}</p>
+                <div class="project-meta">{{ project.impact }}</div>
+                <div class="tech-tags">
+                  {% for tech in project.technologies %}
+                    <span>{{ tech }}</span>
+                  {% endfor %}
+                </div>
+              </article>
+            {% empty %}
+              <article class="project-item">
+                <div class="project-head">
+                  <span class="project-tag">AI product</span>
+                  <span class="project-featured">Featured</span>
+                </div>
+                <h4>Agri Bot — Multilingual Voice Assistant</h4>
+                <p>NLP and speech recognition system using ASR + TTS for agricultural data queries in native languages.</p>
+                <div class="project-meta">Served ~500 users</div>
+                <div class="tech-tags">
+                  <span>Python</span>
+                  <span>NLP</span>
+                  <span>ASR</span>
+                  <span>TTS</span>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+
+          <div class="content-block skills-block">
+            <div class="section-topline">
+              <span class="section-label">Capabilities</span>
+            </div>
+
+            <div class="skill-list">
+              {% for item in skills|slice:':12' %}
+                <span>{{ item.name }}</span>
+              {% empty %}
+                <span>Python</span>
+                <span>Django</span>
+                <span>Machine Learning</span>
+                <span>Deep Learning</span>
+                <span>NLP</span>
+                <span>Computer Vision</span>
+                <span>TensorFlow</span>
+                <span>PyTorch</span>
+                <span>REST API</span>
+                <span>SQL</span>
+              {% endfor %}
+            </div>
+
+            <div class="mini-boxes">
+              <div class="mini-box">
+                <span>Research</span>
+                <strong>Applied ML</strong>
+              </div>
+              <div class="mini-box">
+                <span>Build</span>
+                <strong>Python + Django</strong>
+              </div>
+              <div class="mini-box">
+                <span>Deploy</span>
+                <strong>AI workflows</strong>
+              </div>
+              <div class="mini-box">
+                <span>Outcome</span>
+                <strong>Impact-driven</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="experience-panel reveal" id="experience">
+          <div class="section-topline">
+            <span class="section-label">Experience</span>
+          </div>
+          <div class="experience-list">
+            {% for item in experiences %}
+              <article class="experience-item">
+                <div class="experience-left">
+                  <span class="role-name">{{ item.role }}</span>
+                  <span class="company-name">{{ item.company }}</span>
+                </div>
+                <div class="experience-right">
+                  <span>{{ item.period }}</span>
+                  <p>{{ item.description }}</p>
+                  <ul>
+                    {% for highlight in item.highlights %}
+                      <li>{{ highlight }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </article>
+            {% empty %}
+              <article class="experience-item">
+                <div class="experience-left">
+                  <span class="role-name">Machine Learning Research Intern</span>
+                  <span class="company-name">NIT Calicut</span>
+                </div>
+                <div class="experience-right">
+                  <span>Sep 2025 – Nov 2025</span>
+                  <p>Applied supervised learning algorithms and neural network models in Python for practical data analysis.</p>
+                  <ul>
+                    <li>Built preprocessing, feature engineering, and regression pipelines.</li>
+                    <li>Improved model evaluation accuracy by benchmarking and validation.</li>
+                    <li>Worked in applied research with strong focus on outcomes.</li>
+                  </ul>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer reveal" id="contact">
+        <nav class="footer-nav">
+          <a href="{{ profile.linkedin_url|default:'#' }}" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="{{ profile.github_url|default:'#' }}" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="mailto:{{ profile.email|default:'hello@example.com' }}">Email</a>
+        </nav>
+        <div class="footer-meta">© 2026 {{ profile.name|default:'Your Name' }}.</div>
+      </footer>
+    </div>
+
+    <script src="{% static 'portfolio/app.js' %}"></script>
+  </body>
+</html>
