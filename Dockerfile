@@ -16,9 +16,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-# Ensure entrypoint.sh has execution permissions inside the container
-RUN chmod +x /app/entrypoint.sh
+# Convert Windows CRLF to Linux LF and make executable
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
 
-CMD ["./entrypoint.sh"]
+CMD ["sh", "/app/entrypoint.sh"]
