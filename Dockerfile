@@ -16,8 +16,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
+# Ensure entrypoint.sh has execution permissions inside the container
+RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 8000
 
-CMD ["gunicorn", "portfolio_ai.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+CMD ["./entrypoint.sh"]
