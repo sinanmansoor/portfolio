@@ -88,22 +88,93 @@ function speakReply(text) {
   speechSynthesis.speak(utterance);
 }
 
-async function askAssistant(question) {
+function createBotMessagePlaceholder() {
+  if (!chatMessages) return null;
+  const row = document.createElement('div');
+  row.className = 'message-row bot';
+
+  const label = document.createElement('div');
+  label.className = 'message-label';
+  label.textContent = 'AI';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble bot';
+  bubble.textContent = '';
+
+  row.appendChild(label);
+  row.appendChild(bubble);
+  chatMessages.appendChild(row);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return bubble;
+}
+
+async function streamAssistantReply(question, onToken) {
   const response = await fetch('/api/chat/', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'text/event-stream, application/json',
       'X-CSRFToken': getCookie('csrftoken'),
     },
-    body: JSON.stringify({ question }),
+    body: JSON.stringify({ question, stream: true }),
   });
 
   if (!response.ok) {
-    throw new Error('Could not reach the assistant right now.');
+    let errMsg = 'Could not reach the assistant right now.';
+    try {
+      const errData = await response.json();
+      if (errData.answer) errMsg = errData.answer;
+    } catch (_) {}
+    throw new Error(errMsg);
   }
 
-  const data = await response.json();
-  return data.answer || 'I can answer questions about my background, skills, projects, and availability.';
+  const contentType = response.headers.get('content-type') || '';
+
+  // If backend returned standard JSON (e.g. error or non-streaming fallback)
+  if (contentType.includes('application/json')) {
+    const data = await response.json();
+    onToken(data.answer || '');
+    return data.answer || '';
+  }
+
+  // Handle SSE streaming
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder('utf-8');
+  let fullText = '';
+  let buffer = '';
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop() || '';
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (!trimmed.startsWith('data:')) continue;
+      const dataStr = trimmed.slice(5).trim();
+      if (dataStr === '[DONE]') {
+        return fullText;
+      }
+      try {
+        const parsed = JSON.parse(dataStr);
+        if (parsed.token) {
+          fullText += parsed.token;
+          onToken(parsed.token);
+        }
+      } catch (e) {
+        // Raw token text fallback
+        if (dataStr) {
+          fullText += dataStr;
+          onToken(dataStr);
+        }
+      }
+    }
+  }
+
+  return fullText;
 }
 
 async function submitQuestion(question) {
@@ -114,12 +185,29 @@ async function submitQuestion(question) {
   messageInput.disabled = true;
   addTypingIndicator();
 
+  let bubble = null;
+  let receivedFirstToken = false;
+
   try {
-    const answer = await askAssistant(question);
-    removeTypingIndicator();
-    addMessage(answer, 'bot');
-    if (voiceButton && voiceButton.dataset.voiceEnabled === 'true') {
-      speakReply(answer);
+    const fullAnswer = await streamAssistantReply(question, (token) => {
+      if (!receivedFirstToken) {
+        removeTypingIndicator();
+        bubble = createBotMessagePlaceholder();
+        receivedFirstToken = true;
+      }
+      if (bubble) {
+        bubble.textContent += token;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    });
+
+    if (!receivedFirstToken) {
+      removeTypingIndicator();
+      addMessage(fullAnswer || "I couldn't find details on that topic.", 'bot');
+    }
+
+    if (voiceButton && voiceButton.dataset.voiceEnabled === 'true' && fullAnswer) {
+      speakReply(fullAnswer);
     }
   } catch (error) {
     removeTypingIndicator();

@@ -1,0 +1,77 @@
+PROJECTS — Mohammed Sinan Mansoor
+
+---
+
+Project 1: AI Placement Co-Pilot
+Category: AI Product / Web Application
+Context: Built during Vizuara AI Residency program
+Technologies: Python, Django, REST API, HTML, CSS, JavaScript, LLaMA-3.3-70B LLM
+Description:
+Production-ready, data-driven artificial intelligence web application. Implemented a
+5-step pipeline covering: role-fit scoring, skill-gap detection, and automated ATS resume
+generation. Integrated LLaMA-3.3-70B large language model for real-time inference.
+Deployed end-to-end as a fully functioning product.
+Key highlights:
+- Built with Python, Django, and REST API
+- LLM integration for real-time AI inference
+- 5-step intelligent pipeline for job applicants
+- Fully deployed production application
+
+---
+
+Project 2: Emotional Assistant Bot (Major Project)
+Category: Deep Learning / Multimodal AI
+Technologies: Python, TensorFlow, Keras, Neural Networks, Transformers, Audio Processing, Video Processing
+Description:
+Multimodal deep learning system fusing audio and video streams for real-time emotion
+detection and classification. Neural network transformer architecture trained via
+supervised learning. Achieves 20%+ accuracy gain over single-modality baselines.
+Key highlights:
+- Fuses audio and video for multimodal emotion detection
+- 20%+ accuracy improvement over single-stream approaches
+- Real-time inference capability
+- Transformer architecture with supervised learning
+
+---
+
+Project 3: Agri Bot — Multilingual Voice Assistant
+Category: NLP / Voice AI
+Technologies: Python, NLP, ASR (Automatic Speech Recognition), TTS (Text-to-Speech), Data Analysis
+Description:
+Python natural language processing and speech recognition application enabling
+agricultural data queries in native languages. Deployed and serving approximately 500 users.
+Key highlights:
+- Multilingual voice assistant for farmers
+- ASR + TTS pipeline for native language support
+- Deployed and actively serving ~500 users
+- Real-world impact in the agricultural domain
+
+---
+
+Project 4: ML Intrusion Detection System
+Category: Machine Learning / Cybersecurity
+Technologies: Python, scikit-learn, Random Forest, Data Analysis, Cross-validation
+Description:
+Trained and evaluated a machine learning classification algorithm (Random Forest) on
+network traffic data. Achieved 97%+ detection accuracy with less than 2% false-positive rate
+using model evaluation and cross-validation techniques.
+Key highlights:
+- 97%+ detection accuracy on network intrusion data
+- Less than 2% false-positive rate
+- Random Forest classifier with cross-validation
+- Strong model evaluation methodology
+
+---
+
+Project 5: Emotion-Driven Music Player
+Category: Computer Vision / Deep Learning
+Technologies: Python, OpenCV, Neural Networks, Facial Recognition, Computer Vision
+Description:
+Computer vision application using OpenCV and neural network-based facial recognition to
+classify 7 emotion states at 89% accuracy. Enables real-time data-driven playlist
+automation based on detected emotions.
+Key highlights:
+- 89% accuracy across 7 emotion categories
+- Real-time computer vision with OpenCV
+- Automated playlist selection based on emotion
+- Neural network-based facial recognition

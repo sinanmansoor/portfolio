@@ -1,0 +1,46 @@
+TECHNICAL SKILLS — Mohammed Sinan Mansoor
+
+Programming Languages:
+- Python (primary language — expert level)
+- SQL
+- JavaScript
+- HTML, CSS
+- C, C++
+
+AI / Machine Learning:
+- scikit-learn
+- TensorFlow
+- Keras
+- OpenCV (Computer Vision)
+- NLTK (Natural Language Processing)
+- Neural Networks
+- Transformers (Hugging Face)
+- Supervised Learning
+- Unsupervised Learning
+- Deep Learning
+- Model Training and Evaluation
+- Feature Engineering
+- Data Preprocessing
+
+AI Concepts and Systems:
+- Agentic AI
+- Retrieval-Augmented Generation (RAG)
+- LangChain
+- Large Language Models (LLMs)
+- NLP pipelines
+- Computer Vision systems
+- Multimodal AI
+
+Frameworks and Backend:
+- Django
+- REST API Development
+- Streamlit
+- Gunicorn
+
+Data and Tools:
+- Pandas
+- NumPy
+- MySQL
+- Git
+- Jupyter Notebook
+- Linux

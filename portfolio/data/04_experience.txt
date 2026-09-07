@@ -1,0 +1,24 @@
+WORK EXPERIENCE — Mohammed Sinan Mansoor
+
+---
+
+Role: Machine Learning Research Intern
+Company: National Institute of Technology (NIT) Calicut
+Location: Kerala, India
+Period: September 2025 – November 2025
+Type: Research Internship
+
+Description:
+Applied supervised learning algorithms and neural network models in Python for civil
+engineering data analysis. This was a competitive, nationally-selected internship at one
+of India's premier engineering institutions.
+
+Key Achievements and Responsibilities:
+- Applied supervised learning algorithms and neural network models in Python for
+  civil engineering data analysis
+- Reduced manual estimation time by 40% through intelligent automation
+- Built data preprocessing, feature engineering, and regression pipelines
+- Improved model evaluation accuracy by 15% using cross-validation and
+  performance benchmarking
+- Worked in an applied research environment with strong focus on measurable outcomes
+- Selected from a national applicant pool based on demonstrated Python and ML aptitude

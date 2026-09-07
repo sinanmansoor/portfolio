@@ -16,6 +16,8 @@
     <div class="page-shell">
       <header class="topbar">
         <div class="brand-wrap">
+          <div class="brand-mark">AI</div>
+          <div class="brand-name">{{ profile.name|default:'MOHAMMED SINAN MANSOOR' }}</div>
         </div>
 
         <nav class="topnav" aria-label="Main navigation">
@@ -44,7 +46,7 @@
       <main class="page-main">
         <section class="hero-section" id="about">
           <div class="hero-copy reveal">
-            <div class="hero-badge">AI engineer • personal portfolio</div>
+            <div class="hero-badge">{{ profile.name|default:'MOHAMMED SINAN MANSOOR' }} • AI engineer</div>
             <h1>
                 I build AI systems<br>
                 <span>that work in the real world.</span>
@@ -272,7 +274,7 @@
           <a href="{{ profile.github_url|default:'#' }}" target="_blank" rel="noreferrer">GitHub</a>
           <a href="mailto:{{ profile.email|default:'hello@example.com' }}">Email</a>
         </nav>
-        <div class="footer-meta">© 2026 {{ profile.name|default:'Your Name' }}.</div>
+        <div class="footer-meta">© 2026 {{ profile.name|default:'MOHAMMED SINAN MANSOOR' }}.</div>
       </footer>
     </div>
 

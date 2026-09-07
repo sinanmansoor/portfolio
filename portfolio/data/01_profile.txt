@@ -1,0 +1,26 @@
+PROFILE — Mohammed Sinan Mansoor
+
+Name: Mohammed Sinan Mansoor
+Title: AI Engineer and Python Developer
+Location: Bangalore, India
+Email: sinanmansooor@gmail.com
+LinkedIn: linkedin.com/in/sinanmansoor
+GitHub: github.com/sinanmansoor
+Graduation Year: 2026
+
+Professional Summary:
+AI Engineer and Python Developer (2026 graduate) skilled in machine learning model training,
+model deployment, data science, NLP, computer vision, and deep learning. Built
+production-ready AI applications using Python, Django, TensorFlow, scikit-learn, and REST
+API development. Applied supervised learning and unsupervised learning at NIT Calicut.
+IIT Kharagpur certified — top 10% nationally. Seeking a Machine Learning Engineer / ML
+Engineer / AI Engineer role to deliver data-driven, intelligent, scalable systems through
+analytical problem solving.
+
+What makes Sinan a strong hire:
+- Strong combination of AI engineering fundamentals and applied ML experience
+- Hands-on experience building and deploying production AI applications
+- Python and Django development with a product-focused mindset
+- Deep learning, NLP, and computer vision expertise
+- Research-driven, execution-focused, and strong on engineering outcomes
+- 2026 graduate — fresh, motivated, and up to date with the latest AI advancements

@@ -1,0 +1,31 @@
+ACHIEVEMENTS AND RECOGNITION — Mohammed Sinan Mansoor
+
+---
+
+Achievement 1: IIT Kharagpur Merit Certificate — Top 10% Nationally
+Institution: IIT Kharagpur (Indian Institute of Technology Kharagpur)
+Program: Hands-on AI for Real-world Applications
+Result: Ranked in the top 10% of all participants nationwide
+Significance: IIT Kharagpur is one of India's most prestigious technical universities.
+Achieving a top 10% national rank across all participants demonstrates exceptional
+academic performance in AI, deep learning, and data science topics.
+
+---
+
+Achievement 2: NIT Calicut Research Internship — Competitive National Selection
+Institution: National Institute of Technology (NIT) Calicut
+Type: Machine Learning Research Internship
+How selected: Competitively selected from a national applicant pool based on demonstrated
+Python and ML aptitude
+Significance: NIT institutions are among India's top government engineering colleges.
+Being selected from a national pool highlights strong technical credentials in machine
+learning and Python development.
+
+---
+
+Achievement 3: Vizuara AI Residency
+Program: Vizuara AI Residency
+Output: Built the AI Placement Co-Pilot — a fully deployed, production-ready AI web
+application with LLM integration
+Significance: Demonstrates ability to build and ship real AI products in a structured
+program environment.

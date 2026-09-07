@@ -96,6 +96,14 @@ img {
   font-size: 1.05rem;
 }
 
+.brand-name {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 242, 0.82);
+  white-space: nowrap;
+}
+
 .topnav {
   display: flex;
   align-items: center;
@@ -408,6 +416,43 @@ img {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--border);
   color: rgba(245, 245, 242, 0.9);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.typing-bubble {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+}
+
+.typing-bubble span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(245, 245, 242, 0.6);
+  animation: typingBounce 1.4s infinite ease-in-out both;
+}
+
+.typing-bubble span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typing-bubble span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .message-row.user .bubble {

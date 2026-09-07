@@ -1,6 +1,6 @@
 import json
 
-from django.http import JsonResponse
+from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -99,69 +99,56 @@ def experience_api(request):
 
 @api_view(['POST', 'GET'])
 def chat_api(request):
-    profile = Profile.objects.first()
-    skills = list(Skill.objects.all())
-    projects = list(Project.objects.all())
-    experiences = list(Experience.objects.all())
-    knowledge = list(KnowledgeEntry.objects.all())
-
+    """
+    RAG-powered chat endpoint with Grok LLM integration.
+    Supports:
+      - text/event-stream (SSE) when 'stream': true or Accept: text/event-stream
+      - application/json standard response when requested
+    """
     if request.method == 'GET':
-        return Response({'answer': 'Ask me about my projects, skills, experience, education, achievements, or availability.'})
+        return Response({
+            'answer': "I am Sinan's personal assistant. Ask me anything about his skills, projects, experience, or background!"
+        })
 
     payload = request.data if hasattr(request, 'data') and request.data else json.loads(request.body.decode('utf-8'))
     question = (payload.get('question') or '').strip()
 
     if not question:
-        return Response({'answer': 'Please ask something about my work, skills, projects, education, or AI engineering background.'})
+        return Response(
+            {'answer': "Please ask a question about Sinan's background, skills, or projects."},
+            status=400
+        )
 
-    lowered = question.lower()
+    # Check if client requested streaming
+    wants_stream = (
+        payload.get('stream', True) is True
+        or 'text/event-stream' in request.headers.get('Accept', '')
+    )
 
-    if any(term in lowered for term in ['who are you', 'tell me about yourself', 'about you', 'bio', 'yourself']):
-        answer = profile.summary if profile else 'I am an AI Engineer and Python Developer focused on ML, NLP, computer vision, and real-world AI deployment.'
-        source = 'Profile'
-    elif any(term in lowered for term in ['skill', 'stack', 'technology', 'tools', 'python', 'django', 'ai', 'ml', 'llm', 'tensorflow', 'nlp', 'computer vision']):
-        skill_text = ', '.join(skill.name for skill in skills[:12])
-        answer = f'My technical stack includes {skill_text}. I work across machine learning, deep learning, NLP, computer vision, Django APIs, and AI product building.'
-        source = 'Skills'
-    elif any(term in lowered for term in ['project', 'portfolio', 'work', 'built', 'case study', 'show me your work', 'project list']):
-        project_names = ', '.join(project.title for project in projects[:4])
-        answer = f'I have built projects including {project_names}. These include AI hiring workflows, voice assistants, deep learning emotion systems, and ML-based detection systems.'
-        source = 'Projects'
-    elif any(term in lowered for term in ['experience', 'worked', 'career', 'background', 'job', 'role', 'internship']):
-        exp_text = '; '.join(f'{item.role} at {item.company}' for item in experiences[:3])
-        answer = f'My experience includes {exp_text}. I worked on applied research and AI systems using Python, deep learning, and evaluation-driven development.'
-        source = 'Experience'
-    elif any(term in lowered for term in ['education', 'degree', 'college', 'iit', 'yenepoya', 'graduate', 'study']):
-        answer = 'I am pursuing a Bachelor of Engineering in Artificial Intelligence & Machine Learning at Yenepoya Institute of Technology (2022–2026). I also completed the IIT Kharagpur hands-on AI for Real-world Applications program and ranked in the top 10% nationally.'
-        source = 'Education'
-    elif any(term in lowered for term in ['achievement', 'award', 'certificate', 'top 10', 'merit']):
-        answer = 'I received a merit certificate from IIT Kharagpur for ranking in the top 10% nationally in AI and deep learning, and I was selected for the NIT Calicut machine learning research internship from a national applicant pool.'
-        source = 'Achievement'
-    elif any(term in lowered for term in ['contact', 'hire', 'reach', 'email', 'linkedin', 'github', 'availability', 'available', 'recruiter']):
-        email = profile.email if profile else 'sinanmansooor@gmail.com'
-        answer = f'You can reach me at {email}. I am open to AI Engineer and ML Engineer roles and am based in Bangalore, India. I am also active on GitHub and LinkedIn for project and profile details.'
-        source = 'Contact'
-    elif any(term in lowered for term in ['why hire me', 'why should i hire you', 'best fit', 'role fit', 'ai engineer', 'ai developer', 'ml engineer']):
-        answer = 'I bring a strong combination of AI engineering fundamentals, applied ML experience, Python and Django development, and a product-focused mindset. I have built deployed AI applications, worked on deep learning and NLP use cases, and I am eager to contribute to real-world AI systems and engineering teams.'
-        source = 'Profile'
-    elif any(term in lowered for term in ['resume', 'cv', 'experience pdf', 'download']):
-        resume_url = profile.resume_url if profile else '/static/RESUME.pdf'
-        answer = f'You can view my resume here: {resume_url}'
-        source = 'Resume'
-    else:
-        answer = 'I can answer only questions about my background, skills, projects, education, achievements, and availability. Ask me about my AI work, backend experience, or fit for an AI engineer role.'
-        source = 'Assistant'
+    try:
+        from portfolio.ai.rag import ask
 
-    return Response({
-        'answer': answer,
-        'source': source,
-        'safe': True,
-        'question': question,
-        'knowledge': [
-            {'title': entry.title, 'category': entry.category, 'tags': entry.tags}
-            for entry in knowledge[:6]
-        ],
-    })
+        if wants_stream:
+            def event_stream():
+                for token in ask(question):
+                    yield f"data: {json.dumps({'token': token})}\n\n"
+                yield "data: [DONE]\n\n"
+
+            response = StreamingHttpResponse(event_stream(), content_type='text/event-stream')
+            response['Cache-Control'] = 'no-cache'
+            response['X-Accel-Buffering'] = 'no'  # For Nginx reverse-proxy streaming
+            return response
+
+        # Non-streaming JSON fallback
+        full_answer = "".join(ask(question))
+        return Response({'answer': full_answer, 'question': question})
+
+    except Exception as exc:
+        return Response(
+            {'answer': "I'm having trouble retrieving that information right now. Please try again or email sinanmansooor@gmail.com."},
+            status=500
+        )
+
 
 
 @api_view(['GET'])
