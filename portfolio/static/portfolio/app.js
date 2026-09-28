@@ -788,7 +788,7 @@
       experience: () => print((DATA.experiences || []).map((e) => `<span class="t-accent2">▸ ${esc(e.role)}</span>\n  ${esc(e.company)} <span class="t-dim">· ${esc(e.period)}</span>`).join('\n')),
       education: () => commands.experience(),
       hire: () => { print('Let\'s build something. <span class="t-accent2">Opening the freelance page…</span>'); setTimeout(() => navigate('/hire/'), 500); },
-      contact: () => print(`📧 <a href="mailto:${esc(PROFILE.email)}">${esc(PROFILE.email)}</a>${PROFILE.whatsapp ? `\n💬 <a href="https://wa.me/${esc(PROFILE.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>` : ''}\n🔗 <a href="${esc(PROFILE.linkedin_url)}" target="_blank" rel="noopener">LinkedIn</a>`),
+      contact: () => print(`📧 <a href="mailto:${esc(PROFILE.email)}">${esc(PROFILE.email)}</a>${PROFILE.whatsapp ? `\n💬 <a href="https://wa.me/${esc(PROFILE.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>` : ''}\n🔗 <a href="${esc(PROFILE.linkedin_url)}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">LinkedIn</a>`),
       social: () => commands.contact(),
       resume: () => { print('Opening the web resume…'); setTimeout(() => navigate('/resume/'), 400); },
       theme: (arg) => {
@@ -1257,7 +1257,7 @@ Requirements:
       { icon: '🐙', label: 'Live GitHub', hint: 'section', run: go('#github') },
       { icon: '⌨️', label: 'Open the terminal', hint: 'fun', run: () => { go('#about')(); setTimeout(() => $('#termInput')?.focus({ preventScroll: true }), 1100); } },
       ...['tide', 'forest', 'aurora', 'sunset'].map((n) => ({ icon: '🎨', label: `Accent: ${n}`, hint: 'theme', run: () => { setAccent(n); toast(`Accent: ${n} ✓`); } })),
-      { icon: '💼', label: 'LinkedIn', hint: 'social', run: () => window.open(PROFILE.linkedin_url, '_blank', 'noopener') },
+      { icon: '💼', label: 'LinkedIn', hint: 'social', run: () => window.open(PROFILE.linkedin_url, '_blank', 'noopener,noreferrer') },
       { icon: '🎉', label: 'Surprise me', hint: 'confetti', run: () => confetti() },
     ].filter(Boolean);
     let filtered = actions, sel = 0;

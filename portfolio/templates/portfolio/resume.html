@@ -20,7 +20,7 @@
               <li><svg><use href="#i-pin"/></svg>{{ profile.location }} · {{ profile.relocation }}</li>
               <li><svg><use href="#i-mail"/></svg><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>
               {% if profile.whatsapp %}<li><svg><use href="#i-whatsapp"/></svg><a href="https://wa.me/{{ profile.whatsapp }}" target="_blank" rel="noopener">+{{ profile.whatsapp|slice:":2" }} {{ profile.whatsapp|slice:"2:7" }} {{ profile.whatsapp|slice:"7:" }}</a></li>{% endif %}
-              <li><svg><use href="#i-linkedin"/></svg><a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener">{{ profile.linkedin_url|cut:"https://" }}</a></li>
+              <li><svg><use href="#i-linkedin"/></svg><a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">{{ profile.linkedin_url|cut:"https://www."|cut:"https://" }}</a></li>
               <li><svg><use href="#i-github"/></svg><a href="{{ profile.github_url }}" target="_blank" rel="noopener">{{ profile.github_url|cut:"https://" }}</a></li>
             </ul>
           </div>

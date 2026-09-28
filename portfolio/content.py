@@ -23,7 +23,7 @@ PROFILE = {
     # hide every WhatsApp button on the site.
     "whatsapp": "919746951354",
     "github_url": "https://github.com/sinanmansoor",
-    "linkedin_url": "https://linkedin.com/in/sinanmansoor",
+    "linkedin_url": "https://www.linkedin.com/in/sinanmansoor/",
     "resume_url": "/static/RESUME.pdf",
     "availability": "Open to AI Engineer roles · relocation · freelance",
     "roles": ["AI Engineer", "Agentic AI Developer", "Full-Stack Dev · React + Django", "LLM & RAG Builder", "Software Engineer"],
