@@ -7,7 +7,8 @@ failures are logged, never raised — an alert must not break the site.
   ntfy (phone push, free, no signup):  NTFY_TOPIC  [NTFY_SERVER]
       Install the ntfy app and subscribe to the same topic name.
   Telegram:                            TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
-  Email (Gmail SMTP):                  EMAIL_HOST_PASSWORD (+ settings.EMAIL_*)
+  Email (Resend, free 100/day):        RESEND_API_KEY, VISIT_NOTIFY_EMAIL
+      Without a verified domain, Resend only delivers to the account's own address.
 """
 
 import json
@@ -16,15 +17,14 @@ import os
 import urllib.parse
 import urllib.request
 
-from django.conf import settings
-from django.core.mail import send_mail
-
 logger = logging.getLogger(__name__)
 
 TIMEOUT_SECONDS = 5
 
 
 def _post(url: str, data: bytes, headers: dict) -> None:
+    # Some APIs (Resend, behind Cloudflare) reject urllib's default User-Agent.
+    headers = {"User-Agent": "portfolio-alerts/1.0", **headers}
     request = urllib.request.Request(url, data=data, headers=headers, method="POST")
     with urllib.request.urlopen(request, timeout=TIMEOUT_SECONDS):
         pass
@@ -59,14 +59,20 @@ def _telegram(title: str, body: str) -> bool:
 
 
 def _email(title: str, body: str) -> bool:
-    if not (settings.EMAIL_HOST_PASSWORD and settings.VISIT_NOTIFY_EMAIL):
+    api_key = os.environ.get("RESEND_API_KEY", "").strip()
+    to = os.environ.get("VISIT_NOTIFY_EMAIL", "").strip()
+    if not (api_key and to):
         return False
-    send_mail(
-        subject=title,
-        message=body,
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[settings.VISIT_NOTIFY_EMAIL],
-        fail_silently=False,
+    payload = json.dumps({
+        "from": os.environ.get("RESEND_FROM", "Portfolio Alerts <onboarding@resend.dev>"),
+        "to": [to],
+        "subject": title,
+        "text": body,
+    })
+    _post(
+        "https://api.resend.com/emails",
+        payload.encode("utf-8"),
+        {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
     )
     return True
 
