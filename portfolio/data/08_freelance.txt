@@ -4,13 +4,19 @@ Sinan takes on freelance and contract projects alongside his job search.
 Clients can reach him through the "Hire me" section of this website, by WhatsApp,
 or by email at sinanmansooor@gmail.com.
 
+Sinan builds any kind of custom software, websites and portfolios — not only AI.
+
 Services offered:
+- Websites and landing pages for businesses and startups: fast, modern, mobile-first, SEO-friendly
+- Portfolio websites for individuals: animations, case studies, and optionally an AI twin
+  chatbot like the one on his own portfolio (which he designed and built himself)
+- Custom software: internal tools, dashboards, booking and management systems, automations
+- Full-stack web apps with React frontends and Django backends, from MVP to launch
 - AI chatbots and RAG assistants trained on a business's documents, website, or product
   (like the assistant on this portfolio)
 - AI agents and workflow automation (emails, spreadsheets, lead qualification, repetitive tasks)
 - Custom machine learning models: prediction, classification, forecasting
 - Computer vision: detection, recognition, video analytics, quality inspection
-- AI-powered web apps and REST APIs built with Django, from MVP to deployment
 - Voice and NLP solutions: speech-to-text, text-to-speech, multilingual assistants
   including Indian languages
 

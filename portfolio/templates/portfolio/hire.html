@@ -13,9 +13,9 @@
     <div class="container">
       <div class="hire-top">
         <div class="hire-head">
-          <span class="eyebrow" data-hero><b>✦</b><span class="eb-text">Freelance · Remote</span></span>
+          <span class="eyebrow" data-hero><b>✦</b><span class="eb-text">Freelance · Software · Web · AI</span></span>
           <h1 class="hire-title" data-split>Got an idea? <span class="serif grad-text">Let's make it intelligent.</span></h1>
-          <p class="section-sub" data-hero>I help startups and businesses ship AI that actually works — chatbots, agents, custom models and full-stack products with React and Django. Clear scope, working demos, real support.</p>
+          <p class="section-sub" data-hero>Websites, portfolios, custom software, full-stack apps and AI — chatbots, agents and custom models. If it runs on a screen, I can build it. Clear scope, working demos, real support.</p>
           <div class="hero-cta" data-hero>
             <a class="btn btn-primary" href="#brief" data-magnetic><span>Build your project brief</span><svg><use href="#i-arrow"/></svg></a>
             <a class="btn btn-ghost" href="#services" data-magnetic><span>See services</span></a>
@@ -30,7 +30,7 @@
   <section class="section" id="services">
     <div class="container">
       <span class="eyebrow"><b>01</b><span class="eb-text">Services</span></span>
-      <h2 class="section-title">What I can <span class="serif grad-text">build for you.</span></h2>
+      <h2 class="section-title">Anything you need, <span class="serif grad-text">built properly.</span></h2>
       <div class="services">
         {% for service in services %}
           <article class="service" data-reveal>
@@ -51,7 +51,14 @@
       <span class="eyebrow"><b>02</b><span class="eb-text">Proof</span></span>
       <h2 class="section-title">Shipped, <span class="serif grad-text">not just prototyped.</span></h2>
       <div class="proof-grid">
-        {% for p in nav_projects|slice:":3" %}
+        <a class="proof-card proof-self" href="/" style="--p: #14b8a6" data-reveal data-cursor="You're here">
+          <strong>This site</strong>
+          <span class="mono muted">designed &amp; built by me</span>
+          <h3>AI-powered portfolio</h3>
+          <p>Custom design, animations, an AI twin, JD matcher and live GitHub — want one for yourself or your business?</p>
+          <span class="project-open">You're looking at it <svg><use href="#i-arrow-up"/></svg></span>
+        </a>
+        {% for p in nav_projects|slice:":2" %}
           <a class="proof-card" href="/work/{{ p.slug }}/" style="--p: {{ p.accent }}" data-reveal data-cursor="Open">
             <strong>{{ p.metric }}</strong>
             <span class="mono muted">{{ p.metric_label }}</span>

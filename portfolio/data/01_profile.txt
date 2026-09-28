@@ -24,6 +24,7 @@ What makes Sinan a strong hire:
 - Full-stack development: React frontends and Django / REST API backends, so he ships the
   whole product around the model, not just the model
 - Agentic AI: builds LLM agents and automated AI workflows
+- Also builds custom software, business websites and portfolio websites as a freelancer
 - Deep learning, NLP, and computer vision expertise
 - Research-driven, execution-focused, and strong on engineering outcomes
 - 2026 graduate — fresh, motivated, and up to date with the latest AI advancements

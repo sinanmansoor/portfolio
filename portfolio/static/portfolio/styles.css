@@ -988,6 +988,8 @@ kbd {
 .proof-card { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 30px; border-radius: var(--radius); border: 1px solid var(--line); background: radial-gradient(300px 200px at 100% 0%, color-mix(in srgb, var(--p) 16%, transparent), transparent 70%), var(--surface); transition: border-color 0.3s, transform 0.5s var(--ease); }
 .proof-card:hover { border-color: color-mix(in srgb, var(--p) 60%, transparent); transform: translateY(-4px); }
 .proof-card strong { font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.05em; color: var(--p); }
+.proof-self { background: radial-gradient(300px 200px at 100% 0%, rgba(var(--accent-rgb), 0.2), transparent 70%), var(--surface); border-color: rgba(var(--accent-rgb), 0.35); }
+.proof-self strong { background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 .proof-card .mono { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
 .proof-card h3 { font-size: 22px; margin: 14px 0 0; letter-spacing: -0.02em; }
 .proof-card p { color: var(--muted); margin: 0 0 12px; font-size: 15px; flex: 1; }

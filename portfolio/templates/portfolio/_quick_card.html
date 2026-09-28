@@ -3,7 +3,7 @@
     <span class="preview-avatar has-photo" style="--photo: url('{% static 'portfolio/photo-avatar.webp' %}')">{{ profile.initials }}</span>
     <span><span class="pulse"></span>Taking new projects</span>
   </div>
-  <h4>Prefer a quick chat first?</h4>
+  <h4>Website, software or AI — let's chat.</h4>
   <p>Tell me what you're building — I'll reply with ideas, not a sales pitch, and a quote within a few hours.</p>
   {% if profile.whatsapp %}
     <a class="btn btn-whatsapp" href="https://wa.me/{{ profile.whatsapp }}?text={{ 'Hi Sinan! I found your portfolio and would like to discuss a project.'|urlencode }}" target="_blank" rel="noopener" data-magnetic><svg><use href="#i-whatsapp"/></svg><span>Chat on WhatsApp</span></a>

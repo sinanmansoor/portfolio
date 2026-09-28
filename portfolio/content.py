@@ -210,6 +210,30 @@ SERVICES = [
         "tags": ["LLMs", "RAG", "WhatsApp / Web"],
     },
     {
+        "icon": "code",
+        "title": "Custom Software",
+        "description": "Software built around how your business actually works — internal tools, dashboards, booking and management systems, and automations.",
+        "tags": ["Python", "Django", "React"],
+    },
+    {
+        "icon": "globe",
+        "title": "Websites & Landing Pages",
+        "description": "Fast, modern, mobile-first websites for businesses and startups — designed to look premium and turn visitors into enquiries.",
+        "tags": ["Responsive", "SEO-friendly", "Fast"],
+    },
+    {
+        "icon": "user",
+        "title": "Portfolio Websites",
+        "description": "Personal portfolios that stand out — animations, case studies, and even an AI twin that answers recruiters, like this site.",
+        "tags": ["Personal brand", "Animations", "AI twin"],
+    },
+    {
+        "icon": "web",
+        "title": "Full-Stack Web Apps",
+        "description": "Complete products with React frontends and Django backends — accounts, dashboards, APIs, and AI built in, from MVP to launch.",
+        "tags": ["React", "Django", "REST APIs"],
+    },
+    {
         "icon": "agent",
         "title": "AI Agents & Automation",
         "description": "Agents that read emails, fill sheets, qualify leads, or run repetitive workflows so your team doesn't have to.",
@@ -228,12 +252,6 @@ SERVICES = [
         "tags": ["OpenCV", "Deep Learning", "Real-time"],
     },
     {
-        "icon": "web",
-        "title": "AI-Powered Web Apps",
-        "description": "Full-stack products with React frontends and Django backends, with AI built in — from MVP to deployed, production-ready apps.",
-        "tags": ["React", "Django", "REST APIs"],
-    },
-    {
         "icon": "voice",
         "title": "Voice & NLP Solutions",
         "description": "Speech-to-text, text-to-speech, and multilingual NLP — including assistants in Indian languages.",
@@ -249,7 +267,7 @@ PROCESS = [
 ]
 
 BRIEF_OPTIONS = {
-    "services": ["AI Chatbot", "AI Agent / Automation", "ML Model", "Computer Vision", "Web App", "Voice / NLP", "Something else"],
+    "services": ["Website", "Portfolio", "Custom Software", "Web App", "AI Chatbot", "AI Agent / Automation", "ML Model", "Computer Vision", "Voice / NLP", "Something else"],
     "timelines": ["ASAP", "2–4 weeks", "1–2 months", "Flexible"],
 }
 
@@ -257,7 +275,7 @@ BRIEF_OPTIONS = {
 FAQ = [
     {
         "q": "What kind of projects do you take on?",
-        "a": "AI chatbots and assistants, AI agents and automations, custom ML and computer-vision models, and full-stack web apps built with React and Django — from a first prototype to a deployed product.",
+        "a": "Pretty much any software you need: business websites and landing pages, personal portfolios, custom software and internal tools, full-stack web apps with React and Django, and AI — chatbots, agents, ML and computer-vision models. From a first prototype to a deployed product.",
     },
     {
         "q": "How is pricing decided?",
