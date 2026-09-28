@@ -1,8 +1,7 @@
 import json
 import logging
+from urllib.parse import unquote
 
-from django.conf import settings
-from django.core.mail import send_mail
 from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -10,6 +9,7 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 
 from .ai import ask
 from .content import EXPERIENCES, PROFILE, PROJECTS, SKILLS
+from .notify import send_alert
 
 logger = logging.getLogger(__name__)
 
@@ -32,33 +32,48 @@ def home(request):
     )
 
 
+def _describe_device(user_agent: str) -> str:
+    ua = user_agent.lower()
+    device = "Mobile" if any(k in ua for k in ("mobile", "android", "iphone")) else "Desktop"
+    for name, key in (("Edge", "edg/"), ("Chrome", "chrome/"), ("Firefox", "firefox/"), ("Safari", "safari/")):
+        if key in ua:
+            return f"{device} · {name}"
+    return device
+
+
 @csrf_exempt
 @require_POST
 def visit_api(request):
     """
-    Emails a visitor notification. Called by app.js after the page loads
-    (instead of inside home()) so SMTP never delays rendering, and bots
-    that don't run JavaScript don't trigger it.
+    Sends a visitor alert (ntfy / Telegram / email — see portfolio/notify.py).
+    Called by app.js after the page loads, so it never delays rendering and
+    bots that don't run JavaScript don't trigger it.
     """
-    if not (settings.EMAIL_HOST_PASSWORD and settings.VISIT_NOTIFY_EMAIL):
-        return JsonResponse({"ok": False})
+    meta = request.META
+    forwarded = meta.get("HTTP_X_FORWARDED_FOR", "")
+    user_ip = forwarded.split(",")[0].strip() or meta.get("REMOTE_ADDR", "Unknown IP")
+    user_agent = meta.get("HTTP_USER_AGENT", "Unknown")
 
-    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
-    user_ip = forwarded.split(",")[0].strip() or request.META.get("REMOTE_ADDR", "Unknown IP")
-    user_agent = request.META.get("HTTP_USER_AGENT", "Unknown")
-    referrer = request.META.get("HTTP_REFERER", "Direct")
+    # Vercel adds geolocation headers for free (city is URL-encoded).
+    city = unquote(meta.get("HTTP_X_VERCEL_IP_CITY", ""))
+    region = meta.get("HTTP_X_VERCEL_IP_COUNTRY_REGION", "")
+    country = meta.get("HTTP_X_VERCEL_IP_COUNTRY", "")
+    location = ", ".join(part for part in (city, region, country) if part) or "Unknown location"
 
-    send_mail(
-        subject="New Visitor on Portfolio!",
-        message=(
-            "Someone just visited your portfolio homepage.\n"
-            f"IP Address: {user_ip}\nUser agent: {user_agent}\nReferrer: {referrer}"
-        ),
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[settings.VISIT_NOTIFY_EMAIL],
-        fail_silently=True,
+    try:
+        payload = json.loads(request.body.decode("utf-8") or "{}")
+    except (ValueError, UnicodeDecodeError):
+        payload = {}
+    referrer = str(payload.get("referrer") or "").strip()[:300] if isinstance(payload, dict) else ""
+
+    body = (
+        f"Location: {location}\n"
+        f"Device: {_describe_device(user_agent)}\n"
+        f"Came from: {referrer or 'Direct / unknown'}\n"
+        f"IP: {user_ip}"
     )
-    return JsonResponse({"ok": True})
+    sent = send_alert(f"Portfolio visitor from {location}", body, click_url=request.build_absolute_uri("/"))
+    return JsonResponse({"ok": bool(sent)})
 
 
 @require_GET

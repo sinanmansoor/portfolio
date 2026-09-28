@@ -339,13 +339,20 @@ if (menuButton && mobileNavPanel) {
   });
 }
 
-// Visitor notification — sent after load so it never slows the page down.
+// Visitor alert — sent after load so it never slows the page down, and only
+// once per browser tab session so refreshes don't spam notifications.
 window.addEventListener('load', () => {
   try {
+    if (sessionStorage.getItem('visitAlertSent')) return;
+    sessionStorage.setItem('visitAlertSent', '1');
+  } catch (_) {}
+
+  const body = JSON.stringify({ referrer: document.referrer || '' });
+  try {
     if (navigator.sendBeacon) {
-      navigator.sendBeacon('/api/visit/');
+      navigator.sendBeacon('/api/visit/', new Blob([body], { type: 'application/json' }));
     } else {
-      fetch('/api/visit/', { method: 'POST', keepalive: true }).catch(() => {});
+      fetch('/api/visit/', { method: 'POST', body, keepalive: true }).catch(() => {});
     }
   } catch (_) {}
 });
