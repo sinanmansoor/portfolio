@@ -179,12 +179,18 @@ kbd {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 260;
+    z-index: 1000; /* above every menu, toast and overlay */
     pointer-events: none;
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
   .has-cursor:not(.cursor-ready) .cursor, .has-cursor:not(.cursor-ready) .cursor-dot { opacity: 0; }
+  /* Open dialogs render in the browser's top layer, above anything we can draw:
+     hide the custom cursor there and hand back the system cursor. */
+  .has-cursor:has(dialog[open]) .cursor, .has-cursor:has(dialog[open]) .cursor-dot { display: none; }
+  .has-cursor dialog, .has-cursor dialog * { cursor: auto; }
+  .has-cursor dialog :is(a, button, [role="button"], li[data-i], summary) { cursor: pointer; }
+  .has-cursor dialog :is(input, textarea) { cursor: text; }
   .has-cursor .cursor {
     width: 38px;
     height: 38px;
