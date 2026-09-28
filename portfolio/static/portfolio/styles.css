@@ -1288,6 +1288,26 @@ dialog::backdrop { background: rgba(2, 6, 7, 0.75); backdrop-filter: blur(8px); 
 /* ==========================================================================
    Touch & mobile features
    ========================================================================== */
+/* Email chooser (desktop) */
+.mail-menu {
+  position: fixed;
+  z-index: 270;
+  width: 250px;
+  padding: 8px;
+  border-radius: 18px;
+  border: 1px solid var(--line-2);
+  background: rgba(var(--glass), 0.96);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.85);
+  animation: modal-in 0.35s var(--ease);
+}
+.mail-menu-head { padding: 8px 10px 10px; font-size: 12.5px; color: var(--muted); border-bottom: 1px solid var(--line); margin-bottom: 6px; }
+.mail-menu-head b { display: block; color: var(--text); font-weight: 600; word-break: break-all; }
+.mail-menu a, .mail-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; border-radius: 12px; background: none; font-size: 14.5px; font-weight: 500; text-align: left; transition: background 0.2s, color 0.2s; }
+.mail-menu a:hover, .mail-menu a:focus-visible, .mail-menu button:hover { background: rgba(var(--accent-rgb), 0.14); color: var(--text); outline: none; }
+.mail-menu svg { font-size: 17px; color: var(--accent-2); }
+
 /* Off-screen sections pause their loops (class toggled by JS) */
 .offscreen, .offscreen *, .offscreen *::before, .offscreen *::after { animation-play-state: paused !important; }
 

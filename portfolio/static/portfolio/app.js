@@ -1430,6 +1430,52 @@ Requirements:
     window.addEventListener('pagehide', stop);
   }
 
+  /* ── Email chooser (desktop): mailto opens the OS default app, which is
+     often Outlook — let visitors pick Gmail / Outlook.com / default / copy ── */
+  function initMailChooser() {
+    if (!finePointer) return; // phones already open their mail app
+    let menu = null;
+    const close = () => { if (menu) { menu.remove(); menu = null; } };
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.mail-menu')) return; // handled by the menu's own listeners
+      const link = e.target.closest('a[href^="mailto:"]');
+      if (!link) { close(); return; }
+      e.preventDefault();
+      close();
+      const url = new URL(link.href);
+      const to = decodeURIComponent(url.pathname);
+      const subject = url.searchParams.get('subject') || '';
+      const body = url.searchParams.get('body') || '';
+      const q = (k, v) => (v ? `&${k}=${encodeURIComponent(v)}` : '');
+      const options = [
+        ['Gmail', `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(to)}${q('su', subject)}${q('body', body)}`, '#i-mail'],
+        ['Outlook.com', `https://outlook.live.com/mail/0/deeplink/compose?to=${encodeURIComponent(to)}${q('subject', subject)}${q('body', body)}`, '#i-mail'],
+        ['Default mail app', link.href, '#i-send'],
+      ];
+      menu = document.createElement('div');
+      menu.className = 'mail-menu';
+      menu.setAttribute('role', 'menu');
+      menu.innerHTML = `<div class="mail-menu-head">Email <b>${esc(to)}</b> with…</div>`
+        + options.map(([label, href, icon]) => `<a role="menuitem" href="${esc(href)}" ${href.startsWith('mailto:') ? '' : 'target="_blank" rel="noopener"'} data-mail-option><svg><use href="${icon}"/></svg>${label}</a>`).join('')
+        + `<button type="button" role="menuitem" data-mail-copy><svg><use href="#i-copy"/></svg>Copy address</button>`;
+      document.body.appendChild(menu);
+      const r = link.getBoundingClientRect();
+      const mw = menu.offsetWidth, mh = menu.offsetHeight;
+      const left = clamp(r.left + r.width / 2 - mw / 2, 12, innerWidth - mw - 12);
+      const top = r.bottom + 10 + mh > innerHeight ? r.top - mh - 10 : r.bottom + 10;
+      menu.style.left = `${left}px`;
+      menu.style.top = `${top}px`;
+      $('[data-mail-copy]', menu).addEventListener('click', () => { copyText(to, 'Email copied ✓'); close(); });
+      $$('[data-mail-option]', menu).forEach((a) => a.addEventListener('click', (ev) => {
+        if (a.getAttribute('href').startsWith('mailto:')) { ev.preventDefault(); location.href = a.getAttribute('href'); }
+        setTimeout(close, 50);
+      }));
+      $('a', menu).focus({ preventScroll: true });
+    }, true);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+    window.addEventListener('scroll', close, { passive: true });
+  }
+
   /* ── Small touches ─────────────────────────────────────────────────── */
   function initExtras() {
     $('#cvPrint')?.addEventListener('click', () => window.print());
@@ -1469,7 +1515,7 @@ Requirements:
   [initNav, initCursor, initMagnetic, initNeural, initRoleRotator, initDecode, initReveal, initCounters,
     initScrollAnimations, initScrollChrome, initCards, initChats, initTerminal, initSkills, initGithub,
     initMatch, initBrief, initFaq, initPortrait, initParticles, initAccent, initTldr, initPalette,
-    initDock, initCarousel, initRipple, initShare, initListen, initOffscreenPause, initExtras].forEach(safe);
+    initDock, initCarousel, initRipple, initShare, initListen, initOffscreenPause, initMailChooser, initExtras].forEach(safe);
   safe(revealPage);
   safe(() => runPreloader((delay) => { intro(delay); scrollToInitialHash(); }));
   window.addEventListener('load', sendVisit);
