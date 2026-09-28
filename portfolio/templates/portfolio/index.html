@@ -147,6 +147,10 @@
             A voice assistant farmers use in their own language, emotion models that read face and voice, pipelines that
             rewrite resumes in seconds — I care less about demos and more about what survives contact with real users.
           </p>
+          <button class="listen-btn" type="button" id="listenIntro" data-reveal hidden>
+            <span class="listen-icon"><svg><use href="#i-play"/></svg><span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span></span>
+            <span class="listen-text"><b>Hear my 20-second intro</b><small>Spoken by your browser — no download</small></span>
+          </button>
           <div class="about-facts" data-reveal>
             <div><span class="mono muted">based in</span><strong>{{ profile.location }}</strong></div>
             <div><span class="mono muted">relocation</span><strong class="grad-text">Open — anywhere</strong></div>
@@ -211,6 +215,7 @@
         </div>
       </div>
     </div>
+    <div class="work-dots" id="workDots" aria-hidden="true"></div>
   </section>
 
   <!-- ── Skills ──────────────────────────────────────────────────── -->

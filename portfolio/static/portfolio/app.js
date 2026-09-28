@@ -36,7 +36,7 @@
   };
 
   // Current accent colours for canvas drawing (updated by the accent switcher)
-  const theme = { a: '34, 197, 94', b: '163, 230, 53' };
+  const theme = { a: '6, 194, 88', b: '20, 184, 166' };
   function readTheme() {
     const cs = getComputedStyle(root);
     theme.a = cs.getPropertyValue('--accent-rgb').trim() || theme.a;
@@ -540,6 +540,7 @@
     const timeline = $('#timeline');
     const fill = $('#timelineFill');
     let words = [];
+    let litCount = 0;
     if (statement) {
       const hl = new Set(['AI', 'engineer', 'agentic', 'LLM', 'React', 'Django.', 'real', 'users.']);
       statement.innerHTML = statement.textContent.trim().replace(/\s+/g, ' ').split(' ').map((w) => `<span class="w${hl.has(w) ? ' hl' : ''}">${esc(w)}</span>`).join(' ');
@@ -551,9 +552,15 @@
       if (progress) progress.style.transform = `scaleX(${max > 0 ? y / max : 0})`;
       if (words.length && !reduceMotion) {
         const r = statement.getBoundingClientRect();
-        const p = clamp((innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.3), 0, 1);
-        const lit = Math.round(p * words.length);
-        words.forEach((w, i) => w.classList.toggle('lit', i < lit));
+        if (r.bottom > -200 && r.top < innerHeight + 200) {
+          const p = clamp((innerHeight * 0.85 - r.top) / (r.height + innerHeight * 0.3), 0, 1);
+          const lit = Math.round(p * words.length);
+          if (lit !== litCount) {
+            const [from, to] = lit > litCount ? [litCount, lit] : [lit, litCount];
+            for (let i = from; i < to; i++) words[i].classList.toggle('lit', i < lit);
+            litCount = lit;
+          }
+        }
       }
       if (timeline && fill) {
         const r = timeline.getBoundingClientRect();
@@ -758,7 +765,7 @@
         `  ${kw('ask')} <q>       ask my AI twin anything`,
         `  ${kw('hire')}          freelance page`,
         `  ${kw('resume')}        open my resume`,
-        `  ${kw('theme')} <name>  forest | aurora | ocean | sunset`,
+        `  ${kw('theme')} <name>  tide | forest | aurora | sunset`,
         `  ${kw('cd')} <section>  about | work | skills | github | journey | match`,
         `  ${kw('clear')}         clear the screen`,
         '<span class="t-dim">  psst… there may be a hidden command or two.</span>',
@@ -785,7 +792,7 @@
       social: () => commands.contact(),
       resume: () => { print('Opening the web resume…'); setTimeout(() => navigate('/resume/'), 400); },
       theme: (arg) => {
-        const names = ['forest', 'aurora', 'ocean', 'sunset'];
+        const names = ['tide', 'forest', 'aurora', 'sunset'];
         if (!names.includes(arg)) return print(`usage: theme ${names.join(' | ')}`);
         setAccent(arg); print(`accent set to <span class="t-accent">${arg}</span> ✓`);
       },
@@ -1137,7 +1144,7 @@ Requirements:
         o.fillText(line, 0, y);
       });
       const data = o.getImageData(0, 0, w, h).data;
-      const gap = w < 620 ? 4 : 5;
+      const gap = 5;
       const targets = [];
       for (let y = 0; y < h; y += gap) for (let x = 0; x < w; x += gap) if (data[(y * w + x) * 4 + 3] > 128) targets.push([x, y]);
       const prev = parts;
@@ -1191,13 +1198,13 @@ Requirements:
 
   /* ── Accent switcher ───────────────────────────────────────────────── */
   function setAccent(name) {
-    if (name === 'forest') root.removeAttribute('data-accent'); else root.setAttribute('data-accent', name);
-    local.set('accent', name === 'forest' ? '' : name);
+    if (name === 'tide') root.removeAttribute('data-accent'); else root.setAttribute('data-accent', name);
+    local.set('accent', name === 'tide' ? '' : name);
     readTheme();
     $$('[data-accent-set]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.accentSet === name)));
   }
   function initAccent() {
-    const current = root.getAttribute('data-accent') || 'forest';
+    const current = root.getAttribute('data-accent') || 'tide';
     $$('[data-accent-set]').forEach((b) => {
       b.setAttribute('aria-pressed', String(b.dataset.accentSet === current));
       b.addEventListener('click', () => { setAccent(b.dataset.accentSet); toast(`Accent: ${b.dataset.accentSet} ✓`); });
@@ -1249,7 +1256,7 @@ Requirements:
       { icon: '🧠', label: 'Go to Skills', hint: 'section', run: go('#skills') },
       { icon: '🐙', label: 'Live GitHub', hint: 'section', run: go('#github') },
       { icon: '⌨️', label: 'Open the terminal', hint: 'fun', run: () => { go('#about')(); setTimeout(() => $('#termInput')?.focus({ preventScroll: true }), 1100); } },
-      ...['forest', 'aurora', 'ocean', 'sunset'].map((n) => ({ icon: '🎨', label: `Accent: ${n}`, hint: 'theme', run: () => { setAccent(n); toast(`Accent: ${n} ✓`); } })),
+      ...['tide', 'forest', 'aurora', 'sunset'].map((n) => ({ icon: '🎨', label: `Accent: ${n}`, hint: 'theme', run: () => { setAccent(n); toast(`Accent: ${n} ✓`); } })),
       { icon: '💼', label: 'LinkedIn', hint: 'social', run: () => window.open(PROFILE.linkedin_url, '_blank', 'noopener') },
       { icon: '🎉', label: 'Surprise me', hint: 'confetti', run: () => confetti() },
     ].filter(Boolean);
@@ -1308,6 +1315,121 @@ Requirements:
     requestAnimationFrame(tick);
   }
 
+  /* ── Pause looping animations in off-screen sections ───────────────── */
+  function initOffscreenPause() {
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => e.target.classList.toggle('offscreen', !e.isIntersecting));
+    }, { rootMargin: '150px 0px' });
+    $$('main > section, main > .marquee, main > article > section, main > article > header, .contact').forEach((el) => io.observe(el));
+  }
+
+  /* ── Mobile dock ───────────────────────────────────────────────────── */
+  function initDock() {
+    const dock = $('#mobileDock');
+    if (!dock) return;
+    const threshold = () => (PAGE === 'home' ? innerHeight * 0.55 : 160);
+    let shown = false, ticking = false;
+    const update = () => {
+      const show = window.scrollY > threshold();
+      if (show !== shown) { shown = show; dock.classList.toggle('show', show); }
+      ticking = false;
+    };
+    window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    update();
+    $('[data-dock-ask]', dock)?.addEventListener('click', () => askTwin(''));
+    $$('.dock-btn', dock).forEach((b) => b.addEventListener('click', () => { if (navigator.vibrate) navigator.vibrate(8); }));
+  }
+
+  /* ── Mobile project carousel (scale/fade by distance + dots) ───────── */
+  function initCarousel() {
+    const pin = $('#workPin'), dotsBox = $('#workDots');
+    if (!pin || !dotsBox) return;
+    const mq = window.matchMedia('(max-width: 760px)');
+    const slides = $$('.project-card, .work-end', pin);
+    dotsBox.innerHTML = slides.map((_, i) => `<button type="button" aria-label="Go to slide ${i + 1}" data-i="${i}"></button>`).join('');
+    const dots = $$('button', dotsBox);
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      if (!mq.matches) return;
+      const mid = pin.scrollLeft + pin.clientWidth / 2;
+      let best = 0, bestD = Infinity;
+      slides.forEach((s, i) => {
+        const center = s.offsetLeft + s.offsetWidth / 2;
+        const d = Math.min(1, Math.abs(center - mid) / s.offsetWidth);
+        s.style.setProperty('--d', d.toFixed(3));
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      dots.forEach((d, i) => d.classList.toggle('on', i === best));
+      slides.forEach((s, i) => s.classList.toggle('is-active', i === best));
+    };
+    pin.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    dotsBox.addEventListener('click', (e) => {
+      const b = e.target.closest('button');
+      if (!b) return;
+      const s = slides[Number(b.dataset.i)];
+      pin.scrollTo({ left: s.offsetLeft - (pin.clientWidth - s.offsetWidth) / 2, behavior: reduceMotion ? 'auto' : 'smooth' });
+    });
+    window.addEventListener('resize', update);
+    update();
+  }
+
+  /* ── Touch ripple ──────────────────────────────────────────────────── */
+  function initRipple() {
+    if (reduceMotion) return;
+    const sel = '.btn, .nav-cta, .dock-btn, .project-card, .service, .proof-card, .gh-card, .cv-project, .chips button, .contact-chip, .twin-suggestions button, .skill-filter button, .listen-btn, .quick-card .btn';
+    $$(sel).forEach((el) => el.classList.add('has-ripple'));
+    document.addEventListener('pointerdown', (e) => {
+      const el = e.target.closest(sel);
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const size = Math.max(r.width, r.height) * 2.2;
+      const dot = document.createElement('span');
+      dot.className = 'ripple';
+      dot.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+      el.classList.add('has-ripple');
+      el.appendChild(dot);
+      setTimeout(() => dot.remove(), 700);
+    }, { passive: true });
+  }
+
+  /* ── Native share ──────────────────────────────────────────────────── */
+  function initShare() {
+    $$('[data-share]').forEach((btn) => btn.addEventListener('click', async () => {
+      const url = location.origin + location.pathname;
+      const text = btn.dataset.shareText || `${PROFILE.name} — AI Engineer · agentic AI & LLM apps · full-stack React + Django`;
+      if (navigator.share) {
+        try { await navigator.share({ title: document.title, text, url }); } catch (_) { /* dismissed */ }
+      } else copyText(url, 'Link copied — share it anywhere ✓');
+    }));
+  }
+
+  /* ── "Hear my intro" (speech synthesis, nothing downloaded) ────────── */
+  function initListen() {
+    const btn = $('#listenIntro');
+    if (!btn || !('speechSynthesis' in window)) return;
+    btn.hidden = false;
+    const text = `Hi, I'm Mohammed Sinan Mansoor, an AI engineer from Kannur, Kerala. I build agentic AI and LLM applications, and I ship the full product around them with React and Django. My work includes a voice assistant that farmers use in their own language, emotion recognition models, and an AI placement co-pilot built with LLaMA. I'm open to AI engineer roles, happy to relocate, and I take on freelance projects. Thanks for listening!`;
+    const pickVoice = () => {
+      const voices = speechSynthesis.getVoices();
+      return voices.find((v) => /en-IN/i.test(v.lang)) || voices.find((v) => /en-(GB|US)/i.test(v.lang) && /natural|google|samantha|daniel/i.test(v.name)) || voices.find((v) => /^en/i.test(v.lang));
+    };
+    const stop = () => { speechSynthesis.cancel(); btn.classList.remove('speaking'); };
+    btn.addEventListener('click', () => {
+      if (btn.classList.contains('speaking')) { stop(); return; }
+      const u = new SpeechSynthesisUtterance(text);
+      const v = pickVoice();
+      if (v) u.voice = v;
+      u.rate = 1; u.pitch = 1;
+      u.onend = u.onerror = () => btn.classList.remove('speaking');
+      speechSynthesis.cancel();
+      btn.classList.add('speaking');
+      speechSynthesis.speak(u);
+    });
+    window.addEventListener('pagehide', stop);
+  }
+
   /* ── Small touches ─────────────────────────────────────────────────── */
   function initExtras() {
     $('#cvPrint')?.addEventListener('click', () => window.print());
@@ -1327,9 +1449,9 @@ Requirements:
     const title = document.title;
     document.addEventListener('visibilitychange', () => { document.title = document.hidden ? '👋 Come back — the AI twin misses you' : title; });
     // eslint-disable-next-line no-console
-    console.log('%c👋 Hey, fellow developer!', 'font: 700 16px Inter Tight, sans-serif; color: #22c55e');
+    console.log('%c👋 Hey, fellow developer!', 'font: 700 16px Inter Tight, sans-serif; color: #06c258');
     // eslint-disable-next-line no-console
-    console.log(`%cOpen to AI/ML roles and freelance work → ${PROFILE.email}`, 'color: #a3e635');
+    console.log(`%cOpen to AI/ML roles and freelance work → ${PROFILE.email}`, 'color: #14b8a6');
   }
 
   function sendVisit() {
@@ -1346,7 +1468,8 @@ Requirements:
   const safe = (fn) => { try { fn(); } catch (err) { console.error(err); } };
   [initNav, initCursor, initMagnetic, initNeural, initRoleRotator, initDecode, initReveal, initCounters,
     initScrollAnimations, initScrollChrome, initCards, initChats, initTerminal, initSkills, initGithub,
-    initMatch, initBrief, initFaq, initPortrait, initParticles, initAccent, initTldr, initPalette, initExtras].forEach(safe);
+    initMatch, initBrief, initFaq, initPortrait, initParticles, initAccent, initTldr, initPalette,
+    initDock, initCarousel, initRipple, initShare, initListen, initOffscreenPause, initExtras].forEach(safe);
   safe(revealPage);
   safe(() => runPreloader((delay) => { intro(delay); scrollToInitialHash(); }));
   window.addEventListener('load', sendVisit);

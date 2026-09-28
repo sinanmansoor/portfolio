@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#040806" />
+    <meta name="theme-color" content="#03090a" />
     <meta name="color-scheme" content="dark" />
     <title>{% block title %}{{ profile.name }} — AI Engineer{% endblock %}</title>
     <meta name="description" content="{% block description %}{{ profile.name }} — AI Engineer building agentic AI and LLM apps, full-stack with React and Django. Talk to my AI twin, check your job description fit, or hire me for freelance AI projects.{% endblock %}" />
@@ -11,20 +11,25 @@
     <meta property="og:description" content="Agentic AI & LLM apps · Full-stack React + Django · Talk to my AI twin." />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="{% static 'portfolio/photo-avatar.webp' %}" />
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2322c55e'/%3E%3Cstop offset='1' stop-color='%23a3e635'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='900' font-size='27' fill='%23031208'%3ESM%3C/text%3E%3C/svg%3E" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2306c258'/%3E%3Cstop offset='1' stop-color='%231b86a8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='900' font-size='27' fill='%23031208'%3ESM%3C/text%3E%3C/svg%3E" />
+    <link rel="manifest" href="{% static 'portfolio/site.webmanifest' %}" />
+    <link rel="apple-touch-icon" href="{% static 'portfolio/icon-180.png' %}" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Sinan" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.css" />
     <link rel="stylesheet" id="mainCss" href="{% static 'portfolio/styles.css' %}?v={{ asset_version }}" />
     <style>
       /* Safety net: readable even before (or without) the main stylesheet */
-      html, body { background: #040806; color: #ecf5ef; }
+      html, body { background: #03090a; color: #eaf4f2; }
       svg { width: 1em; height: 1em; }
       .no-css .preloader, .no-css .page-wipe, .no-css .cursor, .no-css .cursor-dot, .no-css .noise,
       .no-css .toast, .no-css .mobile-menu, .no-css .twin-dock, .no-css canvas, .no-css dialog:not([open]) { display: none !important; }
       .no-css body { font-family: system-ui, sans-serif; padding: 16px; }
-      .no-css a { color: #4ade80; }
+      .no-css a { color: #2dd4bf; }
     </style>
     <script>
       (function () {
@@ -43,7 +48,7 @@
         });
         try {
           var a = localStorage.getItem('accent');
-          if (a && /^(aurora|ocean|sunset)$/.test(a)) d.setAttribute('data-accent', a);
+          if (a && /^(forest|aurora|sunset)$/.test(a)) d.setAttribute('data-accent', a);
         } catch (e) {}
         try {
           if (sessionStorage.getItem('booted')) d.classList.add('booted');
@@ -140,15 +145,16 @@
           <a class="contact-chip" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener"><svg><use href="#i-linkedin"/></svg>LinkedIn</a>
           <a class="contact-chip" href="{{ profile.github_url }}" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg>GitHub</a>
           <a class="contact-chip" href="/resume/"><svg><use href="#i-file"/></svg>Resume</a>
+          <button class="contact-chip" type="button" data-share data-cursor="Share"><svg><use href="#i-share"/></svg>Share portfolio</button>
         </div>
         <div class="footer-bottom">
           <span>© 2026 {{ profile.name }}</span>
           <span class="mono"><svg class="inline-icon"><use href="#i-pin"/></svg>{{ profile.location }} · {{ profile.relocation }} · <span id="localTime">--:--</span> IST</span>
           <div class="accent-switch" role="group" aria-label="Accent colour">
             <span class="muted">Accent</span>
+            <button type="button" data-accent-set="tide" aria-label="Tide accent"></button>
             <button type="button" data-accent-set="forest" aria-label="Forest accent"></button>
             <button type="button" data-accent-set="aurora" aria-label="Aurora accent"></button>
-            <button type="button" data-accent-set="ocean" aria-label="Ocean accent"></button>
             <button type="button" data-accent-set="sunset" aria-label="Sunset accent"></button>
           </div>
         </div>
@@ -161,6 +167,14 @@
         <svg><use href="#i-whatsapp"/></svg>
       </a>
     {% endif %}
+
+    <!-- Mobile action dock -->
+    <nav class="mobile-dock" id="mobileDock" aria-label="Quick actions">
+      <a class="dock-btn" href="/#work"><svg><use href="#i-grid"/></svg><span>Work</span></a>
+      <button class="dock-btn dock-ask" type="button" data-dock-ask><span class="orb small" aria-hidden="true"><span></span><span></span><span></span></span><span>Ask AI</span></button>
+      <a class="dock-btn" href="/resume/"><svg><use href="#i-file"/></svg><span>Resume</span></a>
+      {% if profile.whatsapp %}<a class="dock-btn dock-wa" href="https://wa.me/{{ profile.whatsapp }}?text={{ 'Hi Sinan! I found your portfolio and would like to connect.'|urlencode }}" target="_blank" rel="noopener"><svg><use href="#i-whatsapp"/></svg><span>WhatsApp</span></a>{% endif %}
+    </nav>
 
     {% if page != "home" %}
       <!-- AI twin dock (home has it in the hero) -->
@@ -237,6 +251,7 @@
           {% if profile.whatsapp %}<a class="btn btn-ghost" href="https://wa.me/{{ profile.whatsapp }}" target="_blank" rel="noopener"><svg><use href="#i-whatsapp"/></svg><span>WhatsApp</span></a>{% endif %}
           <a class="btn btn-ghost" href="/#match" data-close-dialog><svg><use href="#i-spark"/></svg><span>Check fit with a JD</span></a>
           <button class="btn-link" type="button" id="tldrCopy"><svg><use href="#i-copy"/></svg> Copy summary</button>
+          <button class="btn-link" type="button" data-share data-share-text="30-second summary of Mohammed Sinan Mansoor, AI Engineer"><svg><use href="#i-share"/></svg> Share</button>
         </div>
       </div>
     </dialog>

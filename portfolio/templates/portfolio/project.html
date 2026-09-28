@@ -21,6 +21,7 @@
                 <a class="btn btn-primary" href="{{ project.repo_url }}" target="_blank" rel="noopener" data-magnetic><svg><use href="#i-github"/></svg><span>View the code</span></a>
               {% endif %}
               <button class="btn {% if project.repo_url %}btn-ghost{% else %}btn-primary{% endif %}" type="button" data-ask="Walk me through the {{ project.title }} project — the problem, how it was built, and the result." data-magnetic><svg><use href="#i-spark"/></svg><span>Ask my AI twin about it</span></button>
+              <button class="btn-link" type="button" data-share data-share-text="{{ project.title }} — a case study by {{ profile.name }}"><svg><use href="#i-share"/></svg><span>Share</span></button>
               <a class="btn-link" href="/hire/"><span>Want one like this? Hire me</span><svg><use href="#i-arrow"/></svg></a>
             </div>
           </div>
