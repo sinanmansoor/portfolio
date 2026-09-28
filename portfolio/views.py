@@ -9,6 +9,7 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 
 from .ai import ask
 from .content import (
+    ACHIEVEMENTS,
     BRIEF_OPTIONS,
     EXPERIENCES,
     FAQ,
@@ -87,6 +88,26 @@ def hire(request):
         request,
         "portfolio/hire.html",
         _base_context(page="hire", services=SERVICES, process=PROCESS, brief_options=BRIEF_OPTIONS, faq=FAQ),
+    )
+
+
+@require_GET
+def resume(request):
+    groups = {}
+    for skill in _sorted_skills():
+        groups.setdefault(skill["category"], []).append(skill["name"])
+    labels = {"AI": "AI & LLMs", "Data": "ML & Data", "Backend": "Backend", "Frontend": "Frontend", "Tools": "Tools"}
+    return render(
+        request,
+        "portfolio/resume.html",
+        _base_context(
+            page="resume",
+            work=[e for e in EXPERIENCES if e["kind"] in {"Experience", "Residency"}],
+            education=[e for e in EXPERIENCES if e["kind"] in {"Education", "Certification"}],
+            projects=FEATURED,
+            skill_groups=[(labels.get(cat, cat), names) for cat, names in groups.items()],
+            achievements=ACHIEVEMENTS,
+        ),
     )
 
 

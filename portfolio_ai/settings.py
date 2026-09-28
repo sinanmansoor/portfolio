@@ -55,6 +55,7 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
+                'portfolio.context_processors.asset_version',
             ],
         },
     },
@@ -72,8 +73,9 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files — served by WhiteNoise straight from the source folders
-# (USE_FINDERS), so no collectstatic step is needed on Vercel.
+# Static files. On Vercel they are served directly by the CDN (see
+# vercel.json); WhiteNoise serves them locally and as a fallback, straight
+# from the source folders (USE_FINDERS) so no collectstatic step is needed.
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 WHITENOISE_USE_FINDERS = True

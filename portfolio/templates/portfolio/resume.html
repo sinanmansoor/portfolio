@@ -1,0 +1,110 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+
+{% block title %}Resume — {{ profile.name }} · AI Engineer{% endblock %}
+{% block description %}Resume of {{ profile.name }}: AI Engineer (agentic AI & LLM apps), full-stack React + Django. Experience, projects, skills, education and achievements.{% endblock %}
+{% block og_title %}Resume — {{ profile.name }}{% endblock %}
+
+{% block content %}
+  <section class="resume-page">
+    <div class="container">
+      <article class="resume" id="resume">
+        <!-- Header -->
+        <header class="cv-head" data-hero>
+          <span class="cv-photo has-photo" style="--photo: url('{% static 'portfolio/photo-avatar.webp' %}')">{{ profile.initials }}</span>
+          <div class="cv-id">
+            <span class="eyebrow"><b>CV</b><span class="eb-text">Web resume</span></span>
+            <h1 class="cv-name" data-split>{{ profile.name }}</h1>
+            <p class="cv-role">AI Engineer — agentic AI &amp; LLM apps · Full-stack React + Django</p>
+            <ul class="cv-contact">
+              <li><svg><use href="#i-pin"/></svg>{{ profile.location }} · {{ profile.relocation }}</li>
+              <li><svg><use href="#i-mail"/></svg><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></li>
+              {% if profile.whatsapp %}<li><svg><use href="#i-whatsapp"/></svg><a href="https://wa.me/{{ profile.whatsapp }}" target="_blank" rel="noopener">+{{ profile.whatsapp|slice:":2" }} {{ profile.whatsapp|slice:"2:7" }} {{ profile.whatsapp|slice:"7:" }}</a></li>{% endif %}
+              <li><svg><use href="#i-linkedin"/></svg><a href="{{ profile.linkedin_url }}" target="_blank" rel="noopener">{{ profile.linkedin_url|cut:"https://" }}</a></li>
+              <li><svg><use href="#i-github"/></svg><a href="{{ profile.github_url }}" target="_blank" rel="noopener">{{ profile.github_url|cut:"https://" }}</a></li>
+            </ul>
+          </div>
+          <div class="cv-actions no-print">
+            <a class="btn btn-primary" href="{{ profile.resume_url }}" target="_blank" rel="noopener" download data-magnetic><svg><use href="#i-file"/></svg><span>Download PDF</span></a>
+            <button class="btn btn-ghost" type="button" id="cvPrint"><span>Print / Save</span></button>
+          </div>
+        </header>
+
+        <!-- Summary -->
+        <section class="cv-section" data-reveal>
+          <h2 class="cv-h">Summary</h2>
+          <p class="cv-summary">{{ profile.summary }} Open to AI Engineer and ML Engineer roles, and to relocating for the right team.</p>
+        </section>
+
+        <!-- Experience -->
+        <section class="cv-section" data-reveal>
+          <h2 class="cv-h">Experience</h2>
+          {% for item in work %}
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <div><h3>{{ item.role }}</h3><span class="cv-org">{{ item.company }} · {{ item.location }}</span></div>
+                <span class="cv-date mono">{{ item.period }}</span>
+              </div>
+              <p>{{ item.description }}</p>
+              {% if item.highlights %}<ul>{% for h in item.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+          {% endfor %}
+        </section>
+
+        <!-- Projects -->
+        <section class="cv-section" data-reveal>
+          <h2 class="cv-h">Selected projects</h2>
+          <div class="cv-projects">
+            {% for p in projects %}
+              <a class="cv-project" href="/work/{{ p.slug }}/" style="--p: {{ p.accent }}">
+                <div class="cv-project-top"><h3>{{ p.title }}</h3><strong>{{ p.metric }} <small>{{ p.metric_label }}</small></strong></div>
+                <p>{{ p.summary }}</p>
+                <span class="cv-stack mono">{{ p.technologies|join:" · " }}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </section>
+
+        <!-- Skills -->
+        <section class="cv-section" data-reveal>
+          <h2 class="cv-h">Skills</h2>
+          <dl class="cv-skills">
+            {% for label, names in skill_groups %}
+              <div><dt>{{ label }}</dt><dd>{{ names|join:", " }}</dd></div>
+            {% endfor %}
+          </dl>
+        </section>
+
+        <!-- Education -->
+        <section class="cv-section" data-reveal>
+          <h2 class="cv-h">Education &amp; certification</h2>
+          {% for item in education %}
+            <div class="cv-item">
+              <div class="cv-item-head">
+                <div><h3>{{ item.role }}</h3><span class="cv-org">{{ item.company }} · {{ item.location }}</span></div>
+                <span class="cv-date mono">{{ item.period }}</span>
+              </div>
+              <p>{{ item.description }}</p>
+            </div>
+          {% endfor %}
+        </section>
+
+        <!-- Achievements -->
+        <section class="cv-section" data-reveal>
+          <h2 class="cv-h">Achievements</h2>
+          <ul class="cv-achievements">
+            {% for a in achievements %}<li><b>{{ a.title }}</b> — {{ a.text }}</li>{% endfor %}
+          </ul>
+        </section>
+
+        <footer class="cv-foot no-print">
+          <p class="muted">Want to see how well this matches your role?</p>
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="/#match" data-magnetic><svg><use href="#i-spark"/></svg><span>Check fit with your JD</span></a>
+            <a class="btn btn-ghost" href="mailto:{{ profile.email }}?subject={{ 'Opportunity for you'|urlencode }}" data-magnetic><svg><use href="#i-mail"/></svg><span>Email Sinan</span></a>
+          </div>
+        </footer>
+      </article>
+    </div>
+  </section>
+{% endblock %}

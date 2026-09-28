@@ -243,7 +243,7 @@ SERVICES = [
 
 PROCESS = [
     {"step": "01", "title": "Discover", "text": "A quick call or chat to understand the problem, the data, and what success looks like."},
-    {"step": "02", "title": "Propose", "text": "A clear plan, timeline, and quote before any work starts — no surprises."},
+    {"step": "02", "title": "Propose", "text": "A clear plan, timeline, and quote within a few hours of our chat — no surprises."},
     {"step": "03", "title": "Build", "text": "Short iterations with working demos so you see progress every few days."},
     {"step": "04", "title": "Ship & Support", "text": "Deployment, handover, documentation, and support after launch."},
 ]
@@ -261,7 +261,7 @@ FAQ = [
     },
     {
         "q": "How is pricing decided?",
-        "a": "Every project is scoped first. Share your budget in the brief, or pick “Let's discuss” and we'll work out a plan that fits it together.",
+        "a": "Every project is scoped first, and you get a clear quote within a few hours of our chat. Share your budget in the brief, or pick “Let's discuss” and we'll work out a plan that fits it together.",
     },
     {
         "q": "Do you work remotely?",
@@ -275,4 +275,11 @@ FAQ = [
         "q": "What do you need from me to get started?",
         "a": "A short description of the problem, any data or documents involved, and what success looks like. The brief builder on this page covers it in a minute.",
     },
+]
+
+# Resume page
+ACHIEVEMENTS = [
+    {"title": "IIT Kharagpur Merit Certificate — top 10% nationally", "text": "Hands-on AI for Real-world Applications; ranked in the top 10% of all participants nationwide."},
+    {"title": "NIT Calicut research internship — national selection", "text": "Competitively selected from a national applicant pool for demonstrated Python and ML aptitude."},
+    {"title": "Vizuara AI Residency", "text": "Built and shipped the AI Placement Co-Pilot — a deployed, production-ready LLM application."},
 ]

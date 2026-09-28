@@ -36,7 +36,7 @@
   };
 
   // Current accent colours for canvas drawing (updated by the accent switcher)
-  const theme = { a: '139, 125, 255', b: '34, 211, 238' };
+  const theme = { a: '34, 197, 94', b: '163, 230, 53' };
   function readTheme() {
     const cs = getComputedStyle(root);
     theme.a = cs.getPropertyValue('--accent-rgb').trim() || theme.a;
@@ -758,7 +758,7 @@
         `  ${kw('ask')} <q>       ask my AI twin anything`,
         `  ${kw('hire')}          freelance page`,
         `  ${kw('resume')}        open my resume`,
-        `  ${kw('theme')} <name>  aurora | emerald | sunset | lime`,
+        `  ${kw('theme')} <name>  forest | aurora | ocean | sunset`,
         `  ${kw('cd')} <section>  about | work | skills | github | journey | match`,
         `  ${kw('clear')}         clear the screen`,
         '<span class="t-dim">  psst… there may be a hidden command or two.</span>',
@@ -783,9 +783,9 @@
       hire: () => { print('Let\'s build something. <span class="t-accent2">Opening the freelance page…</span>'); setTimeout(() => navigate('/hire/'), 500); },
       contact: () => print(`📧 <a href="mailto:${esc(PROFILE.email)}">${esc(PROFILE.email)}</a>${PROFILE.whatsapp ? `\n💬 <a href="https://wa.me/${esc(PROFILE.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>` : ''}\n🔗 <a href="${esc(PROFILE.linkedin_url)}" target="_blank" rel="noopener">LinkedIn</a>`),
       social: () => commands.contact(),
-      resume: () => { print('Opening resume in a new tab…'); window.open(PROFILE.resume_url || '/static/RESUME.pdf', '_blank', 'noopener'); },
+      resume: () => { print('Opening the web resume…'); setTimeout(() => navigate('/resume/'), 400); },
       theme: (arg) => {
-        const names = ['aurora', 'emerald', 'sunset', 'lime'];
+        const names = ['forest', 'aurora', 'ocean', 'sunset'];
         if (!names.includes(arg)) return print(`usage: theme ${names.join(' | ')}`);
         setAccent(arg); print(`accent set to <span class="t-accent">${arg}</span> ✓`);
       },
@@ -1191,13 +1191,13 @@ Requirements:
 
   /* ── Accent switcher ───────────────────────────────────────────────── */
   function setAccent(name) {
-    if (name === 'aurora') root.removeAttribute('data-accent'); else root.setAttribute('data-accent', name);
-    local.set('accent', name === 'aurora' ? '' : name);
+    if (name === 'forest') root.removeAttribute('data-accent'); else root.setAttribute('data-accent', name);
+    local.set('accent', name === 'forest' ? '' : name);
     readTheme();
     $$('[data-accent-set]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.accentSet === name)));
   }
   function initAccent() {
-    const current = root.getAttribute('data-accent') || 'aurora';
+    const current = root.getAttribute('data-accent') || 'forest';
     $$('[data-accent-set]').forEach((b) => {
       b.setAttribute('aria-pressed', String(b.dataset.accentSet === current));
       b.addEventListener('click', () => { setAccent(b.dataset.accentSet); toast(`Accent: ${b.dataset.accentSet} ✓`); });
@@ -1243,12 +1243,13 @@ Requirements:
       { icon: '🤝', label: 'Hire me — freelance page', hint: 'freelance', run: () => navigate('/hire/') },
       PROFILE.whatsapp ? { icon: '🟢', label: 'Chat on WhatsApp', hint: 'contact', run: () => window.open(`https://wa.me/${PROFILE.whatsapp}`, '_blank', 'noopener') } : null,
       { icon: '📧', label: 'Copy email address', hint: PROFILE.email, run: () => copyText(PROFILE.email, 'Email copied ✓') },
-      { icon: '📄', label: 'Open resume', hint: 'pdf', run: () => window.open(PROFILE.resume_url, '_blank', 'noopener') },
+      { icon: '📄', label: 'Web resume', hint: 'resume', run: () => navigate('/resume/') },
+      { icon: '⬇️', label: 'Download resume PDF', hint: 'pdf', run: () => window.open(PROFILE.resume_url, '_blank', 'noopener') },
       ...PROJECTS.filter((p) => p.featured).map((p) => ({ icon: '🧪', label: `Case study: ${p.title}`, hint: 'work', run: () => navigate(`/work/${p.slug}/`) })),
       { icon: '🧠', label: 'Go to Skills', hint: 'section', run: go('#skills') },
       { icon: '🐙', label: 'Live GitHub', hint: 'section', run: go('#github') },
       { icon: '⌨️', label: 'Open the terminal', hint: 'fun', run: () => { go('#about')(); setTimeout(() => $('#termInput')?.focus({ preventScroll: true }), 1100); } },
-      ...['aurora', 'emerald', 'sunset', 'lime'].map((n) => ({ icon: '🎨', label: `Accent: ${n}`, hint: 'theme', run: () => { setAccent(n); toast(`Accent: ${n} ✓`); } })),
+      ...['forest', 'aurora', 'ocean', 'sunset'].map((n) => ({ icon: '🎨', label: `Accent: ${n}`, hint: 'theme', run: () => { setAccent(n); toast(`Accent: ${n} ✓`); } })),
       { icon: '💼', label: 'LinkedIn', hint: 'social', run: () => window.open(PROFILE.linkedin_url, '_blank', 'noopener') },
       { icon: '🎉', label: 'Surprise me', hint: 'confetti', run: () => confetti() },
     ].filter(Boolean);
@@ -1309,6 +1310,7 @@ Requirements:
 
   /* ── Small touches ─────────────────────────────────────────────────── */
   function initExtras() {
+    $('#cvPrint')?.addEventListener('click', () => window.print());
     $$('[data-copy]').forEach((b) => b.addEventListener('click', () => copyText(b.dataset.copy, 'Email copied ✓')));
     const clock = $('#localTime');
     if (clock) {
@@ -1325,9 +1327,9 @@ Requirements:
     const title = document.title;
     document.addEventListener('visibilitychange', () => { document.title = document.hidden ? '👋 Come back — the AI twin misses you' : title; });
     // eslint-disable-next-line no-console
-    console.log('%c👋 Hey, fellow developer!', 'font: 700 16px Inter Tight, sans-serif; color: #8b7dff');
+    console.log('%c👋 Hey, fellow developer!', 'font: 700 16px Inter Tight, sans-serif; color: #22c55e');
     // eslint-disable-next-line no-console
-    console.log(`%cOpen to AI/ML roles and freelance work → ${PROFILE.email}`, 'color: #22d3ee');
+    console.log(`%cOpen to AI/ML roles and freelance work → ${PROFILE.email}`, 'color: #a3e635');
   }
 
   function sendVisit() {

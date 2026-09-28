@@ -6,6 +6,7 @@ from .views import (
     hire,
     home,
     project_detail,
+    resume,
     profile_api,
     projects_api,
     skills_api,
@@ -15,6 +16,7 @@ from .views import (
 urlpatterns = [
     path('', home, name='home'),
     path('hire/', hire, name='hire'),
+    path('resume/', resume, name='resume'),
     path('work/<slug:slug>/', project_detail, name='project'),
     path('api/profile/', profile_api, name='profile_api'),
     path('api/skills/', skills_api, name='skills_api'),
