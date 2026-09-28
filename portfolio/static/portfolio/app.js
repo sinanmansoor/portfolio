@@ -10,6 +10,10 @@ const mobileNavPanel = document.getElementById('mobileNavPanel');
 let voiceListening = false;
 let speechRecognition = null;
 
+// Previous turns sent with each question so the assistant can handle follow-ups.
+const chatHistory = [];
+const MAX_HISTORY = 10;
+
 if ('IntersectionObserver' in window) {
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -116,7 +120,7 @@ async function streamAssistantReply(question, onToken) {
       'Accept': 'text/event-stream, application/json',
       'X-CSRFToken': getCookie('csrftoken'),
     },
-    body: JSON.stringify({ question, stream: true }),
+    body: JSON.stringify({ question, history: chatHistory.slice(-MAX_HISTORY), stream: true }),
   });
 
   if (!response.ok) {
@@ -187,6 +191,7 @@ async function submitQuestion(question) {
 
   let bubble = null;
   let receivedFirstToken = false;
+  let rawAnswer = '';
 
   try {
     const fullAnswer = await streamAssistantReply(question, (token) => {
@@ -196,7 +201,9 @@ async function submitQuestion(question) {
         receivedFirstToken = true;
       }
       if (bubble) {
-        bubble.textContent += token;
+        rawAnswer += token;
+        // Bubbles are plain text, so drop markdown bold markers the model may emit.
+        bubble.textContent = rawAnswer.replace(/\*\*/g, '');
         chatMessages.scrollTop = chatMessages.scrollHeight;
       }
     });
@@ -204,6 +211,10 @@ async function submitQuestion(question) {
     if (!receivedFirstToken) {
       removeTypingIndicator();
       addMessage(fullAnswer || "I couldn't find details on that topic.", 'bot');
+    }
+
+    if (fullAnswer) {
+      chatHistory.push({ role: 'user', content: question }, { role: 'assistant', content: fullAnswer });
     }
 
     if (voiceButton && voiceButton.dataset.voiceEnabled === 'true' && fullAnswer) {
@@ -327,3 +338,14 @@ if (menuButton && mobileNavPanel) {
     });
   });
 }
+
+// Visitor notification — sent after load so it never slows the page down.
+window.addEventListener('load', () => {
+  try {
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon('/api/visit/');
+    } else {
+      fetch('/api/visit/', { method: 'POST', keepalive: true }).catch(() => {});
+    }
+  } catch (_) {}
+});

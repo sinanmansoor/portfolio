@@ -1,69 +1,47 @@
 """
 Django settings for portfolio_ai project.
+
+The site has no database: page content lives in portfolio/content.py and the
+chatbot's knowledge in portfolio/data/. This keeps cold starts fast on
+serverless hosts like Vercel.
 """
 
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-SECRET_KEY = os.environ.get(
-    'SECRET_KEY',
-    'django-insecure-)73l@)+8ucg9^g39a&-2rn2$=he=u!e+6xya-8+mj@)e)41j63'
-)
+
+def _env_list(name: str, default: str) -> list[str]:
+    return [item.strip() for item in os.environ.get(name, default).split(',') if item.strip()]
+
+
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-only-change-me')
 
 DEBUG = os.environ.get('DEBUG', 'False').lower() in {'1', 'true', 'yes', 'on'}
 
-ALLOWED_HOSTS = [
-    host.strip()
-    for host in os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1,.onrender.com').split(',')
-    if host.strip()
+ALLOWED_HOSTS = _env_list('ALLOWED_HOSTS', 'localhost,127.0.0.1,.vercel.app')
+
+CSRF_TRUSTED_ORIGINS = [
+    origin if origin.startswith(('http://', 'https://')) else f'https://{origin}'
+    for origin in _env_list(
+        'CSRF_TRUSTED_ORIGINS',
+        'https://*.vercel.app,http://localhost:8000,http://127.0.0.1:8000',
+    )
 ]
 
-# Robust CSRF scheme normalization (prevents 4_0.E001 errors)
-raw_csrf = os.environ.get(
-    'CSRF_TRUSTED_ORIGINS',
-    'https://*.onrender.com,http://localhost:8000,http://127.0.0.1:8000'
-)
-
-csrf_list = []
-for item in raw_csrf.split(','):
-    item = item.strip()
-    if item:
-        if not item.startswith(('http://', 'https://')):
-            item = f"https://{item}"
-        csrf_list.append(item)
-
-CSRF_TRUSTED_ORIGINS = csrf_list
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'corsheaders',
     'portfolio',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -77,8 +55,6 @@ TEMPLATES = [
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
             ],
         },
     },
@@ -86,64 +62,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'portfolio_ai.wsgi.application'
 
+# No database — all content is static.
+DATABASES = {}
 
-# Database Configuration
-# Priority: 1. DATABASE_URL (Render Postgres) -> 2. Local SQLite -> 3. Standard Postgres
-
-DATABASE_URL = os.environ.get('DATABASE_URL')
-USE_SQLITE = os.environ.get('USE_SQLITE', 'False').lower() in {'1', 'true', 'yes', 'on'}
-
-if DATABASE_URL:
-    url = urlparse(DATABASE_URL)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': url.path[1:],
-            'USER': url.username,
-            'PASSWORD': url.password,
-            'HOST': url.hostname,
-            'PORT': url.port or '5432',
-        }
-    }
-elif USE_SQLITE:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', 'portfolio'),
-            'USER': os.environ.get('DB_USER', 'portfolio'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'portfolio'),
-            'HOST': os.environ.get('DB_HOST', 'localhost'),
-            'PORT': os.environ.get('DB_PORT', '5432'),
-        }
-    }
-
-
-# Password validation
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -151,38 +72,30 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-
+# Static files — served by WhiteNoise straight from the source folders
+# (USE_FINDERS), so no collectstatic step is needed on Vercel.
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+WHITENOISE_USE_FINDERS = True
+WHITENOISE_MAX_AGE = 60 * 60 * 24
 
-# WhiteNoise storage for direct static file serving in production
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-    },
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {'console': {'class': 'logging.StreamHandler'}},
+    'root': {'handlers': ['console'], 'level': 'INFO'},
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CORS_ALLOW_ALL_ORIGINS = True
 
-REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',
-    ]
-}
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
-# settings.py
-
+# Visitor notification emails (Gmail SMTP). Set EMAIL_HOST_PASSWORD to a
+# Google App Password in the host's environment variables — never in code.
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'muhammedsinanmansoor@gmail.com'      # Your sending email
-EMAIL_HOST_PASSWORD = 'aablmurxrtadefxd'     # Your 16-character Google App Password
+EMAIL_TIMEOUT = 10
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'muhammedsinanmansoor@gmail.com')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+VISIT_NOTIFY_EMAIL = os.environ.get('VISIT_NOTIFY_EMAIL', 'muhammedsinanmansoor@gmail.com')

@@ -1,206 +1,125 @@
 import json
+import logging
 
+from django.conf import settings
+from django.core.mail import send_mail
 from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import render
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from django.core.mail import send_mail
-from django.conf import settings
-from .models import Experience, KnowledgeEntry, Profile, Project, Skill
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_http_methods, require_POST
+
+from .ai import ask
+from .content import EXPERIENCES, PROFILE, PROJECTS, SKILLS
+
+logger = logging.getLogger(__name__)
 
 
+def _sorted_skills():
+    return sorted(SKILLS, key=lambda s: (s["category"], s["name"]))
+
+
+@require_GET
 def home(request):
-    # 1. Grab the user's IP address (optional, but helpful)
-    user_ip = request.META.get("REMOTE_ADDR", "Unknown IP")
-
-    # 2. Send the notification email
-    send_mail(
-        subject="New Visitor on Portfolio!",
-        message=f"Someone just visited your portfolio homepage.\nIP Address: {user_ip}",
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[
-            "muhammedsinanmansoor@gmail.com"
-        ],  # CHANGE THIS to the email where you want to receive alerts
-        fail_silently=True,  # Crucial: prevents the page from crashing if email fails
-    )
-
-    # 3. Your existing portfolio data logic
-    profile = Profile.objects.first()
-    featured_projects = Project.objects.filter(featured=True).order_by("-created_at")[
-        :4
-    ]
-    skills = Skill.objects.all().order_by("category", "name")
-    experiences = Experience.objects.all().order_by("-id")
-
     return render(
         request,
         "portfolio/index.html",
         {
-            "profile": profile,
-            "featured_projects": featured_projects,
-            "skills": skills,
-            "experiences": experiences,
+            "profile": PROFILE,
+            "featured_projects": [p for p in PROJECTS if p["featured"]][:4],
+            "skills": _sorted_skills(),
+            "experiences": EXPERIENCES,
         },
     )
 
 
-@api_view(["GET"])
+@csrf_exempt
+@require_POST
+def visit_api(request):
+    """
+    Emails a visitor notification. Called by app.js after the page loads
+    (instead of inside home()) so SMTP never delays rendering, and bots
+    that don't run JavaScript don't trigger it.
+    """
+    if not (settings.EMAIL_HOST_PASSWORD and settings.VISIT_NOTIFY_EMAIL):
+        return JsonResponse({"ok": False})
+
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
+    user_ip = forwarded.split(",")[0].strip() or request.META.get("REMOTE_ADDR", "Unknown IP")
+    user_agent = request.META.get("HTTP_USER_AGENT", "Unknown")
+    referrer = request.META.get("HTTP_REFERER", "Direct")
+
+    send_mail(
+        subject="New Visitor on Portfolio!",
+        message=(
+            "Someone just visited your portfolio homepage.\n"
+            f"IP Address: {user_ip}\nUser agent: {user_agent}\nReferrer: {referrer}"
+        ),
+        from_email=settings.EMAIL_HOST_USER,
+        recipient_list=[settings.VISIT_NOTIFY_EMAIL],
+        fail_silently=True,
+    )
+    return JsonResponse({"ok": True})
+
+
+@require_GET
 def profile_api(request):
-    profile = Profile.objects.first()
-    if not profile:
-        return Response({})
-    return Response(
-        {
-            "name": profile.name,
-            "headline": profile.headline,
-            "summary": profile.summary,
-            "location": profile.location,
-            "email": profile.email,
-            "github_url": profile.github_url,
-            "linkedin_url": profile.linkedin_url,
-            "resume_url": profile.resume_url,
-            "availability": profile.availability,
-            "work_style": profile.work_style,
-            "tags": profile.tags,
-        }
-    )
+    return JsonResponse(PROFILE)
 
 
-@api_view(["GET"])
+@require_GET
 def skills_api(request):
-    skills = Skill.objects.all().order_by("category", "name")
-    return Response(
-        [
-            {
-                "id": skill.id,
-                "category": skill.category,
-                "name": skill.name,
-                "proficiency": skill.proficiency,
-                "description": skill.description,
-            }
-            for skill in skills
-        ]
-    )
+    return JsonResponse(_sorted_skills(), safe=False)
 
 
-@api_view(["GET"])
+@require_GET
 def projects_api(request):
-    projects = Project.objects.all().order_by("-featured", "-created_at")
-    return Response(
-        [
-            {
-                "id": project.id,
-                "title": project.title,
-                "summary": project.summary,
-                "description": project.description,
-                "impact": project.impact,
-                "technologies": project.technologies,
-                "repo_url": project.repo_url,
-                "demo_url": project.demo_url,
-                "featured": project.featured,
-                "category": project.category,
-            }
-            for project in projects
-        ]
-    )
+    projects = sorted(PROJECTS, key=lambda p: not p["featured"])
+    return JsonResponse(projects, safe=False)
 
 
-@api_view(["GET"])
+@require_GET
 def experience_api(request):
-    experiences = Experience.objects.all().order_by("-id")
-    return Response(
-        [
-            {
-                "id": item.id,
-                "role": item.role,
-                "company": item.company,
-                "period": item.period,
-                "location": item.location,
-                "description": item.description,
-                "highlights": item.highlights,
-            }
-            for item in experiences
-        ]
-    )
+    return JsonResponse(EXPERIENCES, safe=False)
 
 
-@api_view(["POST", "GET"])
+@csrf_exempt
+@require_http_methods(["GET", "POST"])
 def chat_api(request):
     """
-    RAG-powered chat endpoint with Grok LLM integration.
-    Supports:
-      - text/event-stream (SSE) when 'stream': true or Accept: text/event-stream
-      - application/json standard response when requested
+    Chat endpoint. POST {"question": str, "history": [{"role", "content"}], "stream": bool}.
+    Streams Server-Sent Events by default; returns JSON when stream is false.
     """
     if request.method == "GET":
-        return Response(
-            {
-                "answer": "I am Sinan's personal assistant. Ask me anything about his skills, projects, experience, or background!"
-            }
+        return JsonResponse(
+            {"answer": "I am Sinan's personal assistant. Ask me anything about his skills, projects, experience, or background!"}
         )
 
-    payload = (
-        request.data
-        if hasattr(request, "data") and request.data
-        else json.loads(request.body.decode("utf-8"))
-    )
-    question = (payload.get("question") or "").strip()
+    try:
+        payload = json.loads(request.body.decode("utf-8") or "{}")
+    except (ValueError, UnicodeDecodeError):
+        payload = {}
+    if not isinstance(payload, dict):
+        payload = {}
 
+    question = str(payload.get("question") or "").strip()
     if not question:
-        return Response(
-            {
-                "answer": "Please ask a question about Sinan's background, skills, or projects."
-            },
+        return JsonResponse(
+            {"answer": "Please ask a question about Sinan's background, skills, or projects."},
             status=400,
         )
 
-    # Check if client requested streaming
-    wants_stream = payload.get(
-        "stream", True
-    ) is True or "text/event-stream" in request.headers.get("Accept", "")
+    history = payload.get("history")
 
-    try:
-        from portfolio.ai.rag import ask
+    if payload.get("stream", True) is not False:
 
-        if wants_stream:
+        def event_stream():
+            for token in ask(question, history):
+                yield f"data: {json.dumps({'token': token})}\n\n"
+            yield "data: [DONE]\n\n"
 
-            def event_stream():
-                for token in ask(question):
-                    yield f"data: {json.dumps({'token': token})}\n\n"
-                yield "data: [DONE]\n\n"
+        response = StreamingHttpResponse(event_stream(), content_type="text/event-stream")
+        response["Cache-Control"] = "no-cache"
+        response["X-Accel-Buffering"] = "no"
+        return response
 
-            response = StreamingHttpResponse(
-                event_stream(), content_type="text/event-stream"
-            )
-            response["Cache-Control"] = "no-cache"
-            response["X-Accel-Buffering"] = "no"  # For Nginx reverse-proxy streaming
-            return response
-
-        # Non-streaming JSON fallback
-        full_answer = "".join(ask(question))
-        return Response({"answer": full_answer, "question": question})
-
-    except Exception as exc:
-        return Response(
-            {
-                "answer": "I'm having trouble retrieving that information right now. Please try again or email sinanmansooor@gmail.com."
-            },
-            status=500,
-        )
-
-
-@api_view(["GET"])
-def knowledge_api(request):
-    entries = KnowledgeEntry.objects.all().order_by("-id")
-    return Response(
-        [
-            {
-                "id": entry.id,
-                "title": entry.title,
-                "category": entry.category,
-                "content": entry.content,
-                "tags": entry.tags,
-            }
-            for entry in entries
-        ]
-    )
+    return JsonResponse({"answer": "".join(ask(question, history)), "question": question})

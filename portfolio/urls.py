@@ -4,10 +4,10 @@ from .views import (
     chat_api,
     experience_api,
     home,
-    knowledge_api,
     profile_api,
     projects_api,
     skills_api,
+    visit_api,
 )
 
 urlpatterns = [
@@ -16,6 +16,6 @@ urlpatterns = [
     path('api/skills/', skills_api, name='skills_api'),
     path('api/projects/', projects_api, name='projects_api'),
     path('api/experience/', experience_api, name='experience_api'),
-    path('api/knowledge/', knowledge_api, name='knowledge_api'),
     path('api/chat/', chat_api, name='chat_api'),
+    path('api/visit/', visit_api, name='visit_api'),
 ]
