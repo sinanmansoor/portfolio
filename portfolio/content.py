@@ -1,35 +1,39 @@
 """
 portfolio/content.py
 ─────────────────────
-Static content rendered on the portfolio page.
-
-This replaces the old database models + seed_portfolio command — the data
-never changed at runtime, so keeping it in code means no database to host,
-no migrations, and a much faster cold start on serverless platforms.
-
-Edit this file and redeploy to update the page. The chatbot's knowledge
-lives in portfolio/data/*.txt.
+Everything shown on the portfolio page. Edit this file and push to update
+the site. The chatbot's knowledge lives separately in portfolio/data/*.txt.
 """
 
 PROFILE = {
-    "name": "MOHAMMED SINAN MANSOOR",
-    "headline": "AI Engineer • Applied ML & Product Systems",
+    "name": "Mohammed Sinan Mansoor",
+    "short_name": "Sinan",
+    "initials": "SM",
+    "headline": "AI Engineer · Agentic AI & LLM Apps · Full-Stack (React + Django)",
     "summary": (
-        "I build AI systems with a practical engineering lens—combining machine learning, "
-        "backend development, and product thinking to create tools that are useful, measurable, "
-        "and reliable in deployment. My work spans NLP, computer vision, deep learning, and "
-        "Python-based product development, with a focus on real-world impact rather than "
-        "isolated experimentation."
+        "AI engineer specialising in agentic AI and LLM applications — and a full-stack developer "
+        "who builds the product around the model with React and Django. I ship AI that is useful, "
+        "measurable, and reliable in production."
     ),
     "location": "Bangalore, India",
+    "timezone": "Asia/Kolkata",
     "email": "sinanmansooor@gmail.com",
+    # International format, digits only (e.g. "919876543210"). Leave empty to
+    # hide every WhatsApp button on the site.
+    "whatsapp": "",
     "github_url": "https://github.com/sinanmansoor",
     "linkedin_url": "https://linkedin.com/in/sinanmansoor",
     "resume_url": "/static/RESUME.pdf",
-    "availability": "Open to AI Engineer / ML Engineer roles",
-    "work_style": "Research-driven, execution-focused, and strong in Python, AI systems, and deployment workflows.",
-    "tags": ["AI Engineer", "ML Engineer", "Python", "Django", "NLP", "Computer Vision", "TensorFlow", "RAG", "LLM"],
+    "availability": "Open to AI Engineer roles & freelance projects",
+    "roles": ["AI Engineer", "Agentic AI Developer", "Full-Stack Dev · React + Django", "LLM & RAG Builder", "Software Engineer"],
 }
+
+STATS = [
+    {"value": 97, "suffix": "%", "label": "Intrusion detection accuracy"},
+    {"value": 500, "suffix": "+", "label": "Farmers served by Agri Bot", "prefix": "~"},
+    {"value": 10, "suffix": "%", "label": "IIT Kharagpur national rank", "prefix": "Top "},
+    {"value": 40, "suffix": "%", "label": "Manual effort cut at NIT Calicut"},
+]
 
 SKILLS = [
     {"category": "AI", "name": "Python", "proficiency": 95},
@@ -39,80 +43,202 @@ SKILLS = [
     {"category": "AI", "name": "Computer Vision", "proficiency": 90},
     {"category": "AI", "name": "RAG", "proficiency": 82},
     {"category": "AI", "name": "LangChain", "proficiency": 78},
+    {"category": "AI", "name": "LLMs", "proficiency": 85},
     {"category": "Backend", "name": "Django", "proficiency": 93},
-    {"category": "Backend", "name": "REST API Development", "proficiency": 94},
+    {"category": "Backend", "name": "REST APIs", "proficiency": 94},
+    {"category": "Backend", "name": "Streamlit", "proficiency": 82},
     {"category": "Data", "name": "TensorFlow", "proficiency": 89},
+    {"category": "Data", "name": "Keras", "proficiency": 87},
     {"category": "Data", "name": "scikit-learn", "proficiency": 91},
+    {"category": "Data", "name": "OpenCV", "proficiency": 88},
     {"category": "Data", "name": "Pandas", "proficiency": 88},
     {"category": "Data", "name": "NumPy", "proficiency": 90},
     {"category": "Data", "name": "SQL", "proficiency": 83},
-    {"category": "Frontend", "name": "JavaScript", "proficiency": 85},
-    {"category": "Frontend", "name": "HTML", "proficiency": 84},
-    {"category": "Frontend", "name": "CSS", "proficiency": 84},
+    {"category": "AI", "name": "Agentic AI", "proficiency": 84},
+    {"category": "Frontend", "name": "React", "proficiency": 85},
+    {"category": "Frontend", "name": "JavaScript", "proficiency": 86},
+    {"category": "Frontend", "name": "HTML / CSS", "proficiency": 86},
     {"category": "Tools", "name": "Git", "proficiency": 90},
-    {"category": "Tools", "name": "Jupyter", "proficiency": 88},
     {"category": "Tools", "name": "Linux", "proficiency": 84},
-    {"category": "Tools", "name": "MySQL", "proficiency": 80},
+    {"category": "Tools", "name": "Jupyter", "proficiency": 88},
 ]
 
-# Listed in display order; only featured projects appear on the page.
+# Rings of the orbiting skills map, innermost first.
+SKILL_ORBITS = [
+    ["Python", "TensorFlow", "Transformers", "LLMs"],
+    ["NLP", "Computer Vision", "RAG", "Django", "scikit-learn", "OpenCV"],
+    ["Agentic AI", "LangChain", "React", "REST APIs", "Keras", "Pandas", "SQL", "Git"],
+]
+
 PROJECTS = [
     {
-        "title": "Agri Bot — Multilingual Voice Assistant",
-        "summary": "NLP and speech recognition system using ASR + TTS for agricultural data queries in native languages.",
-        "impact": "Served ~500 users",
-        "technologies": ["Python", "NLP", "ASR", "TTS", "Speech Recognition"],
-        "featured": True,
-        "category": "Voice AI",
-    },
-    {
-        "title": "Emotional Assistant Bot",
-        "summary": "Multimodal deep learning system that fuses audio and video streams for real-time emotion detection and classification.",
-        "impact": "20%+ gain over unimodal baselines",
-        "technologies": ["Python", "TensorFlow", "OpenCV", "Neural Networks", "Audio/Video ML"],
-        "featured": True,
-        "category": "Deep Learning",
-    },
-    {
+        "slug": "placement-copilot",
         "title": "AI Placement Co-Pilot",
-        "summary": "Production-ready AI web application for role-fit scoring, skill-gap detection, and automated ATS resume generation using Python, Django, and LLaMA-3.3-70B.",
-        "impact": "Deployed AI hiring workflow",
-        "technologies": ["Python", "Django", "REST API", "HTML", "CSS", "JavaScript", "LLM"],
+        "category": "LLM Product",
+        "summary": "An AI hiring companion that scores role fit, finds skill gaps, and writes ATS-ready resumes in seconds.",
+        "problem": "Students apply blindly — no signal on how well they fit a role or what to fix before applying.",
+        "approach": "A 5-step Django pipeline: parse the profile, score it against the role, detect skill gaps, recommend fixes, and generate an ATS-optimised resume with LLaMA-3.3-70B in real time.",
+        "impact": "Shipped end-to-end during the Vizuara AI Residency as a deployed, production-ready product.",
+        "metric": "5-step",
+        "metric_label": "LLM pipeline",
+        "technologies": ["Python", "Django", "REST API", "LLaMA-3.3-70B", "JavaScript"],
+        "accent": "#d4ff3f",
         "featured": True,
-        "category": "AI",
     },
     {
-        "title": "ML Intrusion Detection System",
-        "summary": "Random Forest-based intrusion detection model for network traffic classification and anomaly detection.",
-        "impact": "97%+ accuracy with <2% false positives",
-        "technologies": ["Python", "scikit-learn", "Random Forest", "Model Evaluation"],
-        "featured": False,
-        "category": "AI Security",
+        "slug": "emotional-assistant",
+        "title": "Emotional Assistant Bot",
+        "category": "Multimodal Deep Learning · Major Project",
+        "summary": "Reads emotion from voice and face at the same time — and beats single-signal models by 20%+.",
+        "problem": "Emotion models that only listen or only look miss half the signal and misread people.",
+        "approach": "Fused audio and video streams in a transformer-based neural network trained with supervised learning, running inference in real time.",
+        "impact": "20%+ accuracy gain over single-modality baselines.",
+        "metric": "+20%",
+        "metric_label": "vs unimodal",
+        "technologies": ["TensorFlow", "Keras", "Transformers", "OpenCV", "Audio ML"],
+        "accent": "#9b8cff",
+        "featured": True,
     },
     {
+        "slug": "agri-bot",
+        "title": "Agri Bot",
+        "category": "Voice AI · NLP",
+        "summary": "A multilingual voice assistant that lets farmers ask for agricultural data in their own language.",
+        "problem": "Critical farming data sits behind text interfaces in languages many farmers don't read.",
+        "approach": "Built an ASR → NLP → TTS pipeline so farmers speak naturally in native languages and hear answers back.",
+        "impact": "Deployed and serving roughly 500 users.",
+        "metric": "~500",
+        "metric_label": "active users",
+        "technologies": ["Python", "NLP", "ASR", "TTS", "Speech Recognition"],
+        "accent": "#3fffd1",
+        "featured": True,
+    },
+    {
+        "slug": "intrusion-detection",
+        "title": "ML Intrusion Detection",
+        "category": "ML · Cybersecurity",
+        "summary": "A network-traffic classifier that catches intrusions with 97%+ accuracy and under 2% false alarms.",
+        "problem": "Security teams drown in false positives from rule-based intrusion alerts.",
+        "approach": "Engineered traffic features and trained a Random Forest, validated with cross-validation and benchmarking against alternatives.",
+        "impact": "97%+ detection accuracy with a false-positive rate below 2%.",
+        "metric": "97%",
+        "metric_label": "accuracy",
+        "technologies": ["scikit-learn", "Random Forest", "Pandas", "Cross-validation"],
+        "accent": "#ff7a59",
+        "featured": True,
+    },
+    {
+        "slug": "emotion-music",
         "title": "Emotion-Driven Music Player",
-        "summary": "Computer vision system that classifies 7 emotional states from facial expressions and automates a real-time playlist.",
-        "impact": "89% emotion classification accuracy",
-        "technologies": ["OpenCV", "Computer Vision", "Python", "Neural Networks"],
-        "featured": False,
-        "category": "Vision AI",
+        "category": "Computer Vision",
+        "summary": "Looks at your face, reads one of 7 emotions, and changes the playlist to match — live.",
+        "problem": "Playlists don't know how you feel right now.",
+        "approach": "OpenCV face detection plus a neural-network classifier for 7 emotional states, wired to real-time playlist automation.",
+        "impact": "89% classification accuracy across 7 emotions.",
+        "metric": "89%",
+        "metric_label": "7-class accuracy",
+        "technologies": ["OpenCV", "Neural Networks", "Python", "Computer Vision"],
+        "accent": "#ff5fa2",
+        "featured": True,
     },
 ]
 
 EXPERIENCES = [
     {
+        "kind": "Experience",
         "role": "Machine Learning Research Intern",
-        "company": "National Institute of Technology (NIT) Calicut",
+        "company": "NIT Calicut",
         "period": "Sep 2025 – Nov 2025",
         "location": "Kerala, India",
-        "description": (
-            "Applied supervised learning algorithms and neural network models in Python for civil "
-            "engineering data analysis, reducing manual estimation time by 40% through intelligent automation."
-        ),
+        "description": "Applied supervised learning and neural networks to civil-engineering data — competitively selected from a national applicant pool.",
         "highlights": [
-            "Built preprocessing, feature engineering, and regression pipelines.",
-            "Improved model evaluation accuracy by 15% through cross-validation and benchmarking.",
-            "Worked in applied research with practical AI outcomes.",
+            "Cut manual estimation time by 40% through intelligent automation",
+            "Built preprocessing, feature engineering, and regression pipelines",
+            "Improved model evaluation accuracy by 15% with cross-validation and benchmarking",
         ],
     },
+    {
+        "kind": "Residency",
+        "role": "AI Resident",
+        "company": "Vizuara AI Residency",
+        "period": "Residency program",
+        "location": "Remote",
+        "description": "Built and shipped the AI Placement Co-Pilot — a deployed LLM product — in a structured residency program.",
+        "highlights": [
+            "Designed a 5-step LLM pipeline with LLaMA-3.3-70B",
+            "Took the product from idea to deployment end-to-end",
+        ],
+    },
+    {
+        "kind": "Certification",
+        "role": "Hands-on AI for Real-world Applications",
+        "company": "IIT Kharagpur",
+        "period": "Jul 2024 – Oct 2024",
+        "location": "India",
+        "description": "Merit certificate — ranked in the top 10% of all participants nationwide.",
+        "highlights": [
+            "Deep learning, ML performance optimisation, and data science",
+        ],
+    },
+    {
+        "kind": "Education",
+        "role": "B.E. Artificial Intelligence & Machine Learning",
+        "company": "Yenepoya Institute of Technology",
+        "period": "2022 – 2026",
+        "location": "Karnataka, India",
+        "description": "Hands-on AI and ML engineering, Python, deep learning, and applied data science.",
+        "highlights": [],
+    },
 ]
+
+SERVICES = [
+    {
+        "icon": "chat",
+        "title": "AI Chatbots & RAG Assistants",
+        "description": "Custom assistants trained on your documents, website, or product — answering customers 24/7, like the one on this page.",
+        "tags": ["LLMs", "RAG", "WhatsApp / Web"],
+    },
+    {
+        "icon": "agent",
+        "title": "AI Agents & Automation",
+        "description": "Agents that read emails, fill sheets, qualify leads, or run repetitive workflows so your team doesn't have to.",
+        "tags": ["Agentic AI", "APIs", "Workflows"],
+    },
+    {
+        "icon": "model",
+        "title": "Custom ML Models",
+        "description": "Prediction, classification, and forecasting models built on your data — evaluated honestly and ready to deploy.",
+        "tags": ["scikit-learn", "TensorFlow", "Evaluation"],
+    },
+    {
+        "icon": "vision",
+        "title": "Computer Vision",
+        "description": "Detection, recognition, and video analytics — from face and emotion recognition to quality inspection.",
+        "tags": ["OpenCV", "Deep Learning", "Real-time"],
+    },
+    {
+        "icon": "web",
+        "title": "AI-Powered Web Apps",
+        "description": "Full-stack products with React frontends and Django backends, with AI built in — from MVP to deployed, production-ready apps.",
+        "tags": ["React", "Django", "REST APIs"],
+    },
+    {
+        "icon": "voice",
+        "title": "Voice & NLP Solutions",
+        "description": "Speech-to-text, text-to-speech, and multilingual NLP — including assistants in Indian languages.",
+        "tags": ["ASR", "TTS", "Multilingual"],
+    },
+]
+
+PROCESS = [
+    {"step": "01", "title": "Discover", "text": "A quick call or chat to understand the problem, the data, and what success looks like."},
+    {"step": "02", "title": "Propose", "text": "A clear plan, timeline, and fixed quote within 24 hours — no surprises."},
+    {"step": "03", "title": "Build", "text": "Short iterations with working demos so you see progress every few days."},
+    {"step": "04", "title": "Ship & Support", "text": "Deployment, handover, documentation, and support after launch."},
+]
+
+BRIEF_OPTIONS = {
+    "services": ["AI Chatbot", "AI Agent / Automation", "ML Model", "Computer Vision", "Web App", "Voice / NLP", "Something else"],
+    "budgets": ["< ₹25k", "₹25k – ₹75k", "₹75k – ₹2L", "₹2L+", "Not sure yet"],
+    "timelines": ["ASAP", "2–4 weeks", "1–2 months", "Flexible"],
+}

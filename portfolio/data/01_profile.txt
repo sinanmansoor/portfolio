@@ -1,7 +1,8 @@
 PROFILE — Mohammed Sinan Mansoor
 
 Name: Mohammed Sinan Mansoor
-Title: AI Engineer and Python Developer
+Title: AI Engineer — Agentic AI & LLM Apps, Full-Stack Developer (React + Django)
+Also describes himself as: AI Developer, Agentic AI Developer, Full-Stack Developer, Software Engineer
 Location: Bangalore, India
 Email: sinanmansooor@gmail.com
 LinkedIn: linkedin.com/in/sinanmansoor
@@ -20,7 +21,9 @@ analytical problem solving.
 What makes Sinan a strong hire:
 - Strong combination of AI engineering fundamentals and applied ML experience
 - Hands-on experience building and deploying production AI applications
-- Python and Django development with a product-focused mindset
+- Full-stack development: React frontends and Django / REST API backends, so he ships the
+  whole product around the model, not just the model
+- Agentic AI: builds LLM agents and automated AI workflows
 - Deep learning, NLP, and computer vision expertise
 - Research-driven, execution-focused, and strong on engineering outcomes
 - 2026 graduate — fresh, motivated, and up to date with the latest AI advancements

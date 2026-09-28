@@ -8,7 +8,17 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 
 from .ai import ask
-from .content import EXPERIENCES, PROFILE, PROJECTS, SKILLS
+from .content import (
+    BRIEF_OPTIONS,
+    EXPERIENCES,
+    PROCESS,
+    PROFILE,
+    PROJECTS,
+    SERVICES,
+    SKILL_ORBITS,
+    SKILLS,
+    STATS,
+)
 from .notify import send_alert
 
 logger = logging.getLogger(__name__)
@@ -25,9 +35,22 @@ def home(request):
         "portfolio/index.html",
         {
             "profile": PROFILE,
-            "featured_projects": [p for p in PROJECTS if p["featured"]][:4],
+            "stats": STATS,
+            "projects": [p for p in PROJECTS if p["featured"]],
             "skills": _sorted_skills(),
+            "skill_orbits": SKILL_ORBITS,
             "experiences": EXPERIENCES,
+            "services": SERVICES,
+            "process": PROCESS,
+            "brief_options": BRIEF_OPTIONS,
+            # Consumed by app.js (terminal, command palette, brief builder).
+            "site_data": {
+                "profile": PROFILE,
+                "projects": PROJECTS,
+                "skills": SKILLS,
+                "experiences": EXPERIENCES,
+                "services": [s["title"] for s in SERVICES],
+            },
         },
     )
 
@@ -124,11 +147,12 @@ def chat_api(request):
         )
 
     history = payload.get("history")
+    mode = "jd" if payload.get("mode") == "jd" else "chat"
 
     if payload.get("stream", True) is not False:
 
         def event_stream():
-            for token in ask(question, history):
+            for token in ask(question, history, mode):
                 yield f"data: {json.dumps({'token': token})}\n\n"
             yield "data: [DONE]\n\n"
 
@@ -137,4 +161,4 @@ def chat_api(request):
         response["X-Accel-Buffering"] = "no"
         return response
 
-    return JsonResponse({"answer": "".join(ask(question, history)), "question": question})
+    return JsonResponse({"answer": "".join(ask(question, history, mode)), "question": question})

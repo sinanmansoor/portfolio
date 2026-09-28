@@ -36,6 +36,7 @@ CONTACT_EMAIL = "sinanmansooor@gmail.com"
 # Only this many previous messages are sent back to the model.
 MAX_HISTORY_MESSAGES = 10
 MAX_MESSAGE_CHARS = 2000
+MAX_JD_CHARS = 6000
 RATE_LIMIT_WAIT_SECONDS = 6
 
 _SYSTEM_PROMPT = """You are the AI assistant on the portfolio website of Mohammed Sinan Mansoor, \
@@ -110,9 +111,33 @@ def _clean_history(history) -> list[dict]:
     return cleaned
 
 
-def ask(question: str, history=None) -> Generator[str, None, None]:
-    """Stream the assistant's answer to `question`, token by token."""
-    question = question.strip()[:MAX_MESSAGE_CHARS]
+_JD_INSTRUCTIONS = """A recruiter pasted the job description below. Evaluate how well Sinan fits it, using only the KNOWLEDGE. Be honest — a credible score beats a flattering one.
+
+Reply in exactly this plain-text format and nothing else:
+SCORE: <integer 0-100>
+STRENGTHS:
+- <matching requirement and the specific evidence from Sinan's profile>
+(3 to 5 bullets)
+GAPS:
+- <requirement not evidenced in the profile, or "None significant">
+(1 to 3 bullets)
+VERDICT: <one confident sentence a recruiter can act on>
+
+JOB DESCRIPTION:
+"""
+
+
+def ask(question: str, history=None, mode: str = "chat") -> Generator[str, None, None]:
+    """
+    Stream the assistant's answer to `question`, token by token.
+    mode="jd" treats `question` as a job description and returns a fit report.
+    """
+    question = question.strip()
+    if mode == "jd":
+        question = _JD_INSTRUCTIONS + question[:MAX_JD_CHARS] if question else ""
+        history = None
+    else:
+        question = question[:MAX_MESSAGE_CHARS]
     if not question:
         yield "Please ask me something about Sinan's background, skills, or projects."
         return

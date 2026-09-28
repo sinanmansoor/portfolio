@@ -1,283 +1,563 @@
-{% load static %}
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#050505" />
-    <title>{{ profile.name|default:'Your Name' }} | AI Portfolio</title>
-    <meta name="description" content="AI portfolio assistant for {{ profile.name|default:'Your Name' }}, showcasing projects, skills, and experience." />
+    <meta name="theme-color" content="#060608" />
+    <title>{{ profile.name }} — AI Engineer</title>
+    <meta name="description" content="{{ profile.name }} — AI Engineer building LLM, RAG, computer vision and ML systems. Talk to my AI twin, check your job description fit, or hire me for freelance AI projects." />
+    <meta property="og:title" content="{{ profile.name }} — AI Engineer" />
+    <meta property="og:description" content="Talk to my AI twin, explore my work, or hire me for your next AI project." />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23060608'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-weight='900' font-size='28' fill='%23d4ff3f'%3ESM%3C/text%3E%3C/svg%3E" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.css" />
     <link rel="stylesheet" href="{% static 'portfolio/styles.css' %}" />
+    <script>document.documentElement.classList.add('js');</script>
   </head>
   <body>
-    <div class="page-shell">
-      <header class="topbar">
-        <div class="brand-wrap">
-          <div class="brand-mark">AI</div>
-          <div class="brand-name">{{ profile.name|default:'MOHAMMED SINAN MANSOOR' }}</div>
-        </div>
+    <!-- ── Icon sprite ─────────────────────────────────────────────── -->
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+      <defs>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="M7 17 17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+        <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12 20 4l-6 16-2.5-6.5L4 12Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+        <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="m4 7 8 6 8-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="i-whatsapp" viewBox="0 0 24 24"><path fill="currentColor" d="M12.04 2a9.9 9.9 0 0 0-8.5 14.97L2 22l5.18-1.5A9.9 9.9 0 1 0 12.04 2Zm0 18.1a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.07.89.9-3-.2-.31a8.2 8.2 0 1 1 6.85 3.75Zm4.5-6.14c-.25-.12-1.46-.72-1.69-.8-.23-.08-.39-.12-.56.12-.16.25-.64.8-.78.97-.14.16-.29.18-.54.06a6.7 6.7 0 0 1-1.98-1.22 7.4 7.4 0 0 1-1.37-1.7c-.14-.25 0-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.42h-.47a.9.9 0 0 0-.66.31 2.77 2.77 0 0 0-.86 2.06 4.8 4.8 0 0 0 1 2.55 11 11 0 0 0 4.2 3.7c.59.26 1.05.41 1.4.52a3.4 3.4 0 0 0 1.56.1c.48-.07 1.46-.6 1.67-1.17.2-.58.2-1.07.14-1.17-.06-.1-.22-.17-.47-.29Z"/></symbol>
+        <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.15-1.11-1.46-1.11-1.46-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.1.39-1.99 1.03-2.69-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.3 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/></symbol>
+        <symbol id="i-linkedin" viewBox="0 0 24 24"><path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></symbol>
+        <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+        <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8l-5-5Z M14 3v5h5M9 13h6M9 17h6" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+        <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+        <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 10h8M8 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+        <symbol id="i-agent" viewBox="0 0 24 24"><rect x="5" y="8" width="14" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 4v4M9 13h.01M15 13h.01M2 13h3M19 13h3" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+        <symbol id="i-model" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="5" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="19" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="19" cy="18" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 7l3.5 3.5M7 17l3.5-3.5M13.5 10.5 17 7M13.5 13.5 17 17" stroke="currentColor" stroke-width="1.8"/></symbol>
+        <symbol id="i-vision" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+        <symbol id="i-web" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M7 6.5h.01M10 6.5h.01M9 14l-2 1.5L9 17M15 14l2 1.5-2 1.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/></symbol>
+        <symbol id="i-voice" viewBox="0 0 24 24"><path d="M4 10v4M8 7v10M12 4v16M16 8v8M20 11v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 6.8L21 11l-6.8 2.2L12 20l-2.2-6.8L3 11l6.8-2.2L12 2Z" fill="currentColor"/></symbol>
+      </defs>
+    </svg>
 
-        <nav class="topnav" aria-label="Main navigation">
-          <a href="#about">About</a>
-          <a href="#projects">Projects</a>
-          <a href="#experience">Experience</a>
-          <a href="#contact">Contact</a>
-        </nav>
-
-        <button class="menu-button" aria-label="Open menu" aria-expanded="false">
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      </header>
-
-      <div class="mobile-nav-panel" id="mobileNavPanel" aria-hidden="true">
-        <nav class="mobile-nav" aria-label="Mobile navigation">
-          <a href="#about">About</a>
-          <a href="#projects">Projects</a>
-          <a href="#experience">Experience</a>
-          <a href="#contact">Contact</a>
-        </nav>
+    <!-- ── Preloader ───────────────────────────────────────────────── -->
+    <div class="preloader" id="preloader" aria-hidden="true">
+      <div class="preloader-inner">
+        <div class="boot-lines" id="bootLines"></div>
+        <div class="boot-bar"><span id="bootBar"></span></div>
+        <div class="boot-meta"><span>SINAN.OS</span><span id="bootPct">0%</span></div>
       </div>
+    </div>
 
-      <main class="page-main">
-        <section class="hero-section" id="about">
-          <div class="hero-copy reveal">
-            <div class="hero-badge">{{ profile.name|default:'MOHAMMED SINAN MANSOOR' }} • AI engineer</div>
-            <h1>
-                I build AI systems<br>
-                <span>that work in the real world.</span>
-            </h1>
-            <p class="hero-summary">
-                {{ profile.summary|default:'I design and ship AI systems across machine learning, backend engineering, and product thinking—building tools that are useful, measurable, and reliable in practice.' }}
-            </p>
+    <!-- ── Chrome ──────────────────────────────────────────────────── -->
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor-label" id="cursorLabel"></span></div>
+    <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-            <div class="hero-actions">
-              <a class="primary-btn" href="{{ profile.resume_url|default:'#' }}" target="_blank" rel="noreferrer">View resume</a>
-              <a class="secondary-btn" href="mailto:{{ profile.email|default:'hello@example.com' }}">Contact</a>
+    <header class="nav" id="nav">
+      <a class="nav-logo" href="#top" data-cursor="Home">
+        <span class="logo-mark">{{ profile.initials }}</span>
+        <span class="logo-text">{{ profile.name }}</span>
+      </a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#about" data-magnetic>About</a>
+        <a href="#work" data-magnetic>Work</a>
+        <a href="#skills" data-magnetic>Skills</a>
+        <a href="#journey" data-magnetic>Journey</a>
+        <a href="#match" data-magnetic>JD Match</a>
+        <a href="#hire" data-magnetic class="nav-hire">Hire me</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="kbd-btn" id="paletteOpen" type="button" aria-label="Open command palette" data-cursor="Menu">
+          <span>⌘K</span>
+        </button>
+        <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
+      </div>
+    </header>
+
+    <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+      <nav aria-label="Mobile">
+        <a href="#about"><small>01</small>About</a>
+        <a href="#work"><small>02</small>Work</a>
+        <a href="#skills"><small>03</small>Skills</a>
+        <a href="#journey"><small>04</small>Journey</a>
+        <a href="#match"><small>05</small>JD Match</a>
+        <a href="#hire"><small>06</small>Hire me</a>
+      </nav>
+    </div>
+
+    <main id="smooth">
+      <!-- ── Hero ──────────────────────────────────────────────────── -->
+      <section class="hero" id="top">
+        <canvas class="neural" id="neural" aria-hidden="true"></canvas>
+        <div class="hero-glow" aria-hidden="true"></div>
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <div class="status-pill" data-hero>
+              <span class="pulse"></span>
+              {{ profile.availability }}
             </div>
-
-            <div class="hero-metadata">
-              <span>{{ profile.location|default:'Bangalore, India' }}</span>
-              <span>{{ profile.availability|default:'Open to AI / ML roles' }}</span>
+            <h1 class="hero-title" aria-label="I build intelligent systems that ship.">
+              <span class="line"><span class="word" data-hero-word>I build</span></span>
+              <span class="line"><span class="word serif" data-hero-word>intelligent</span></span>
+              <span class="line"><span class="word" data-hero-word>systems that <em class="accent">ship.</em></span></span>
+            </h1>
+            <p class="hero-role" data-hero>
+              <span class="mono muted">&gt;_ {{ profile.short_name|lower }}.role =</span>
+              <span class="role-rotator" id="roleRotator" data-roles='{{ profile.roles|join:"|" }}'>{{ profile.roles.0 }}</span><span class="caret"></span>
+            </p>
+            <p class="hero-sub" data-hero>{{ profile.summary }}</p>
+            <div class="hero-cta" data-hero>
+              <a class="btn btn-primary" href="#work" data-magnetic data-cursor="Explore">
+                <span>See my work</span><svg><use href="#i-arrow"/></svg>
+              </a>
+              <a class="btn btn-ghost" href="#hire" data-magnetic>
+                <span>Hire me for a project</span>
+              </a>
+              <a class="btn-link" href="{{ profile.resume_url }}" target="_blank" rel="noopener" data-cursor="Resume">
+                <svg><use href="#i-file"/></svg> Resume
+              </a>
             </div>
           </div>
 
-          <div class="agent-preview reveal" aria-label="AI assistant panel preview">
-            <div class="assistant-panel">
-              <div class="assistant-topline">
-                <div class="assistant-live">
-                  <span class="live-dot"></span>
-                  AI assistant live
+          <!-- AI twin -->
+          <div class="twin" id="twin" data-hero>
+            <div class="twin-card" data-tilt>
+              <div class="twin-head">
+                <div class="orb" id="orb" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div>
+                  <div class="twin-name">Sinan's AI twin</div>
+                  <div class="twin-status"><span class="dot"></span><span id="twinStatus">Online · replies in seconds</span></div>
                 </div>
-                <button class="voice-btn" type="button">Voice</button>
+                <button class="icon-btn" id="twinVoice" type="button" aria-label="Ask with your voice" data-cursor="Speak">
+                  <svg><use href="#i-mic"/></svg>
+                </button>
               </div>
-
-              <div id="chatMessages" class="chat-messages">
-                <div class="message-row bot">
-                  <div class="message-label">AI</div>
-                  <div class="bubble bot">
-                    Hello! I’m {{ profile.name|default:'Your Name' }}’s personal assistant. Ask me about my background, projects, and fit for AI roles.
-                  </div>
+              <div class="twin-messages" id="chatMessages" aria-live="polite" data-lenis-prevent>
+                <div class="msg bot">
+                  <p>Hey 👋 I'm Sinan's AI twin. I know his projects, skills and experience inside out. Ask me anything — or tap a question below.</p>
                 </div>
               </div>
-
-              <div class="quick-prompt-grid">
-                <button class="quick-prompt" type="button">About me</button>
-                <button class="quick-prompt" type="button">Projects</button>
-                <button class="quick-prompt" type="button">Skills</button>
-                <button class="quick-prompt" type="button">Why hire me</button>
+              <div class="twin-suggestions" id="chatSuggestions">
+                <button type="button">Why should we hire Sinan?</button>
+                <button type="button">What's his strongest project?</button>
+                <button type="button">Does he take freelance work?</button>
+                <button type="button">Summarise him in 3 bullets</button>
               </div>
-
-              <form id="chatForm" class="chat-form">
-                <input id="messageInput" type="text" placeholder="Ask about my background..." aria-label="Ask the assistant" />
-                <button type="submit">Ask</button>
+              <form class="twin-form" id="chatForm" autocomplete="off">
+                <input id="chatInput" type="text" maxlength="1500" placeholder="Ask about skills, projects, fit…" aria-label="Ask Sinan's AI twin" />
+                <button type="submit" aria-label="Send" data-cursor="Send"><svg><use href="#i-send"/></svg></button>
               </form>
             </div>
           </div>
-        </section>
+        </div>
 
-        <section class="ticker-wrap reveal">
-          <div class="ticker-track">
-            <span>AI Engineer</span>
-            <span>Python Developer</span>
-            <span>ML Systems</span>
-            <span>NLP</span>
-            <span>Computer Vision</span>
-            <span>Deep Learning</span>
-            <span>Large Language Models</span>
-            <span>AI Product Building</span>
-          </div>
-        </section>
+        <div class="scroll-cue" aria-hidden="true"><span>Scroll</span><i></i></div>
+      </section>
 
-        <section class="feature-grid reveal">
-          <article class="feature-card">
-            <span class="feature-label">Role fit</span>
-            <h3>Applied AI engineering</h3>
-            <p>Building with Python, ML systems, and product context to create solutions that are technically solid and business-aware.</p>
-          </article>
-          <article class="feature-card">
-            <span class="feature-label">Systems</span>
-            <h3>From prototype to product</h3>
-            <p>Working across experimentation, backend integration, evaluation, and deployment with a practical engineering mindset.</p>
-          </article>
-          <article class="feature-card">
-            <span class="feature-label">Impact</span>
-            <h3>Outcome-driven execution</h3>
-            <p>Focused on reliability, performance, and measurable value rather than superficial demos or empty buzzwords.</p>
-          </article>
-        </section>
-
-        <section class="summary-panel reveal">
-          <div class="summary-copy">
-            <span class="section-label">Profile</span>
-            <h3>{{ profile.headline|default:'AI Engineer and Python Developer.' }}</h3>
-          </div>
-          <div class="summary-meta">
-            <span>{{ profile.location|default:'Bangalore, India' }}</span>
-            <span>{{ profile.availability|default:'Open to AI Engineer / ML Engineer roles' }}</span>
-            <span>{{ profile.work_style|default:'Research-driven, execution-focused, strong in Python, AI systems, and deployment workflows.' }}</span>
-          </div>
-        </section>
-
-        <section class="content-columns reveal" id="projects">
-          <div class="content-block projects-block">
-            <div class="section-topline">
-              <span class="section-label">Selected work</span>
+      <!-- ── Stats ─────────────────────────────────────────────────── -->
+      <section class="stats container" aria-label="Highlights">
+        {% for stat in stats %}
+          <div class="stat" data-reveal>
+            <div class="stat-value">
+              {% if stat.prefix %}<span class="stat-affix">{{ stat.prefix }}</span>{% endif %}<span data-count="{{ stat.value }}">{{ stat.value }}</span><span class="stat-affix">{{ stat.suffix }}</span>
             </div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        {% endfor %}
+      </section>
 
-            {% for project in featured_projects %}
-              <article class="project-item">
-                <div class="project-head">
-                  <span class="project-tag">{{ project.category }}</span>
-                  {% if project.featured %}<span class="project-featured">Featured</span>{% endif %}
+      <!-- ── Marquee ───────────────────────────────────────────────── -->
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track">
+          {% for i in "12" %}
+            <span>Large Language Models</span><i>✦</i><span>Computer Vision</span><i>✦</i><span>RAG Systems</span><i>✦</i><span>Deep Learning</span><i>✦</i><span>AI Agents</span><i>✦</i><span>NLP & Voice</span><i>✦</i><span>React + Django</span><i>✦</i><span>Agentic Workflows</span><i>✦</i>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- ── About ─────────────────────────────────────────────────── -->
+      <section class="section about" id="about">
+        <div class="container">
+          <div class="section-head">
+            <span class="eyebrow"><b>01</b> About</span>
+          </div>
+          <div class="about-grid">
+            <!-- Portrait with a playful computer-vision HUD -->
+            <figure class="portrait" id="portrait" data-reveal>
+              <div class="portrait-stage">
+                <div class="portrait-grid" aria-hidden="true"></div>
+                <div class="portrait-layer" data-depth="0.6">
+                  <img class="portrait-img mono-img" src="{% static 'portfolio/photo.webp' %}" alt="" aria-hidden="true" width="620" height="797" loading="lazy" decoding="async" />
+                  <img class="portrait-img color-img" src="{% static 'portfolio/photo.webp' %}" alt="Portrait of {{ profile.name }}" width="620" height="797" loading="lazy" decoding="async" />
                 </div>
-                <h4>{{ project.title }}</h4>
-                <p>{{ project.summary }}</p>
-                <div class="project-meta">{{ project.impact }}</div>
-                <div class="tech-tags">
-                  {% for tech in project.technologies %}
-                    <span>{{ tech }}</span>
-                  {% endfor %}
+                <div class="portrait-hud" data-depth="-0.4" aria-hidden="true">
+                  <div class="face-box">
+                    <i class="c tl"></i><i class="c tr"></i><i class="c bl"></i><i class="c br"></i>
+                    <span class="face-tag">face · 0.99</span>
+                  </div>
+                  <span class="lm" style="left:40%;top:35.5%"></span>
+                  <span class="lm" style="left:58.5%;top:35.5%"></span>
+                  <span class="lm" style="left:49.5%;top:44%"></span>
+                  <span class="lm" style="left:44%;top:49.5%"></span>
+                  <span class="lm" style="left:56%;top:49.5%"></span>
+                  <div class="scanline"></div>
                 </div>
-              </article>
-            {% empty %}
-              <article class="project-item">
-                <div class="project-head">
-                  <span class="project-tag">AI product</span>
-                  <span class="project-featured">Featured</span>
+                <div class="portrait-readout" aria-hidden="true">
+                  <div class="readout-head"><span class="rec"></span>emotion.model · live demo</div>
+                  <div class="readout-row"><span>focused</span><b><i style="--v:.92"></i></b><em>92%</em></div>
+                  <div class="readout-row"><span>curious</span><b><i style="--v:.87"></i></b><em>87%</em></div>
+                  <div class="readout-row"><span>ready to build</span><b><i style="--v:.99"></i></b><em>99%</em></div>
                 </div>
-                <h4>Agri Bot — Multilingual Voice Assistant</h4>
-                <p>NLP and speech recognition system using ASR + TTS for agricultural data queries in native languages.</p>
-                <div class="project-meta">Served ~500 users</div>
-                <div class="tech-tags">
-                  <span>Python</span>
-                  <span>NLP</span>
-                  <span>ASR</span>
-                  <span>TTS</span>
+              </div>
+              <figcaption class="portrait-caption">
+                <span class="mono">{{ profile.name }}</span>
+                <span class="muted mono">{{ profile.location }}</span>
+              </figcaption>
+            </figure>
+
+            <div class="about-main">
+            <p class="about-statement" id="aboutStatement">
+              I'm Sinan — an AI engineer from Bangalore who builds agentic AI and LLM apps, then ships the full product around them with React and Django.
+              A voice assistant farmers use in their own language, emotion models that read face and voice, pipelines that
+              rewrite resumes in seconds — I care less about demos and more about what survives contact with real users.
+            </p>
+
+            <div class="terminal" id="terminal" data-reveal>
+              <div class="terminal-bar">
+                <span class="tdot r"></span><span class="tdot y"></span><span class="tdot g"></span>
+                <span class="terminal-title">sinan@portfolio: ~</span>
+              </div>
+              <div class="terminal-body" id="termBody" data-lenis-prevent>
+                <div class="term-out"><span class="t-lime">Welcome to sinan.os</span> — an interactive shell about me.</div>
+                <div class="term-out">Type <span class="t-kw">help</span> to see commands. Try <span class="t-kw">projects</span> or <span class="t-kw">sudo hire-sinan</span>.</div>
+              </div>
+              <form class="terminal-input" id="termForm" autocomplete="off">
+                <span class="prompt">➜ <b>~</b></span>
+                <input id="termInput" type="text" spellcheck="false" aria-label="Terminal command" />
+              </form>
+            </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Work ──────────────────────────────────────────────────── -->
+      <section class="section work" id="work">
+        <div class="container work-head">
+          <span class="eyebrow"><b>02</b> Selected work</span>
+          <h2 class="section-title">Projects that <span class="serif">left the notebook.</span></h2>
+          <p class="section-sub">Each one started as a real problem and ended as a working system. Click any card for the full case study.</p>
+        </div>
+        <div class="work-pin" id="workPin">
+          <div class="work-track" id="workTrack">
+            {% for project in projects %}
+              <article class="project-card" data-project="{{ project.slug }}" style="--accent: {{ project.accent }}" data-cursor="Open" tabindex="0" role="button" aria-label="Open case study: {{ project.title }}">
+                <div class="project-spot" aria-hidden="true"></div>
+                <div class="project-top">
+                  <span class="project-index">{{ forloop.counter|stringformat:"02d" }}</span>
+                  <span class="project-cat">{{ project.category }}</span>
                 </div>
+                <div class="project-visual" aria-hidden="true">
+                  <div class="viz viz-{{ forloop.counter }}">
+                    {% for i in "123456789012" %}<i></i>{% endfor %}
+                  </div>
+                  <div class="project-metric">
+                    <strong>{{ project.metric }}</strong>
+                    <span>{{ project.metric_label }}</span>
+                  </div>
+                </div>
+                <h3 class="project-title">{{ project.title }}</h3>
+                <p class="project-summary">{{ project.summary }}</p>
+                <div class="tags">
+                  {% for tech in project.technologies %}<span>{{ tech }}</span>{% endfor %}
+                </div>
+                <div class="project-open">Case study <svg><use href="#i-arrow-up"/></svg></div>
               </article>
             {% endfor %}
-          </div>
-
-          <div class="content-block skills-block">
-            <div class="section-topline">
-              <span class="section-label">Capabilities</span>
+            <div class="work-end">
+              <p>Want something like this<br/><span class="serif">for your business?</span></p>
+              <a class="btn btn-primary" href="#hire" data-magnetic><span>Start a project</span><svg><use href="#i-arrow"/></svg></a>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div class="skill-list">
-              {% for item in skills|slice:':12' %}
-                <span>{{ item.name }}</span>
-              {% empty %}
-                <span>Python</span>
-                <span>Django</span>
-                <span>Machine Learning</span>
-                <span>Deep Learning</span>
-                <span>NLP</span>
-                <span>Computer Vision</span>
-                <span>TensorFlow</span>
-                <span>PyTorch</span>
-                <span>REST API</span>
-                <span>SQL</span>
+      <!-- ── Skills ────────────────────────────────────────────────── -->
+      <section class="section skills" id="skills">
+        <div class="container skills-grid">
+          <div class="skills-copy">
+            <span class="eyebrow"><b>03</b> Capabilities</span>
+            <h2 class="section-title">AI depth, <span class="serif">full-stack range.</span></h2>
+            <p class="section-sub">Models and agents at the core, React and Django around them — so an idea goes from notebook to a product people use. Hover the orbit or filter the stack.</p>
+            <div class="skill-filter" id="skillFilter" role="tablist">
+              <button class="active" data-filter="all" type="button">All</button>
+              <button data-filter="AI" type="button">AI</button>
+              <button data-filter="Data" type="button">ML & Data</button>
+              <button data-filter="Backend" type="button">Backend</button>
+              <button data-filter="Frontend" type="button">Frontend</button>
+              <button data-filter="Tools" type="button">Tools</button>
+            </div>
+            <div class="skill-bars" id="skillBars">
+              {% for skill in skills %}
+                <div class="skill-bar" data-cat="{{ skill.category }}">
+                  <div class="skill-bar-top"><span>{{ skill.name }}</span><span class="mono">{{ skill.proficiency }}</span></div>
+                  <div class="skill-bar-track"><i style="--w: {{ skill.proficiency }}%"></i></div>
+                </div>
               {% endfor %}
             </div>
-
-            <div class="mini-boxes">
-              <div class="mini-box">
-                <span>Research</span>
-                <strong>Applied ML</strong>
-              </div>
-              <div class="mini-box">
-                <span>Build</span>
-                <strong>Python + Django</strong>
-              </div>
-              <div class="mini-box">
-                <span>Deploy</span>
-                <strong>AI workflows</strong>
-              </div>
-              <div class="mini-box">
-                <span>Outcome</span>
-                <strong>Impact-driven</strong>
-              </div>
-            </div>
           </div>
-        </section>
 
-        <section class="experience-panel reveal" id="experience">
-          <div class="section-topline">
-            <span class="section-label">Experience</span>
+          <div class="orbit-wrap" aria-hidden="true">
+            <div class="orbit-core"><span>{{ profile.initials }}</span></div>
+            {% for ring in skill_orbits %}
+              <div class="orbit orbit-{{ forloop.counter }}" style="--n: {{ ring|length }}">
+                {% for skill in ring %}
+                  <div class="orbit-item" style="--i: {{ forloop.counter0 }}"><span>{{ skill }}</span></div>
+                {% endfor %}
+              </div>
+            {% endfor %}
           </div>
-          <div class="experience-list">
+        </div>
+      </section>
+
+      <!-- ── Journey ───────────────────────────────────────────────── -->
+      <section class="section journey" id="journey">
+        <div class="container">
+          <span class="eyebrow"><b>04</b> Journey</span>
+          <h2 class="section-title">Experience, <span class="serif">earned.</span></h2>
+          <div class="timeline" id="timeline">
+            <div class="timeline-line"><i id="timelineFill"></i></div>
             {% for item in experiences %}
-              <article class="experience-item">
-                <div class="experience-left">
-                  <span class="role-name">{{ item.role }}</span>
-                  <span class="company-name">{{ item.company }}</span>
+              <article class="tl-item" data-reveal>
+                <div class="tl-node"></div>
+                <div class="tl-meta">
+                  <span class="tl-kind">{{ item.kind }}</span>
+                  <span class="tl-period mono">{{ item.period }}</span>
                 </div>
-                <div class="experience-right">
-                  <span>{{ item.period }}</span>
+                <div class="tl-card">
+                  <h3>{{ item.role }}</h3>
+                  <div class="tl-company">{{ item.company }} · {{ item.location }}</div>
                   <p>{{ item.description }}</p>
-                  <ul>
-                    {% for highlight in item.highlights %}
-                      <li>{{ highlight }}</li>
-                    {% endfor %}
-                  </ul>
-                </div>
-              </article>
-            {% empty %}
-              <article class="experience-item">
-                <div class="experience-left">
-                  <span class="role-name">Machine Learning Research Intern</span>
-                  <span class="company-name">NIT Calicut</span>
-                </div>
-                <div class="experience-right">
-                  <span>Sep 2025 – Nov 2025</span>
-                  <p>Applied supervised learning algorithms and neural network models in Python for practical data analysis.</p>
-                  <ul>
-                    <li>Built preprocessing, feature engineering, and regression pipelines.</li>
-                    <li>Improved model evaluation accuracy by benchmarking and validation.</li>
-                    <li>Worked in applied research with strong focus on outcomes.</li>
-                  </ul>
+                  {% if item.highlights %}
+                    <ul>{% for h in item.highlights %}<li>{{ h }}</li>{% endfor %}</ul>
+                  {% endif %}
                 </div>
               </article>
             {% endfor %}
           </div>
-        </section>
-      </main>
+        </div>
+      </section>
 
-      <footer class="site-footer reveal" id="contact">
-        <nav class="footer-nav">
-          <a href="{{ profile.linkedin_url|default:'#' }}" target="_blank" rel="noreferrer">LinkedIn</a>
-          <a href="{{ profile.github_url|default:'#' }}" target="_blank" rel="noreferrer">GitHub</a>
-          <a href="mailto:{{ profile.email|default:'hello@example.com' }}">Email</a>
-        </nav>
-        <div class="footer-meta">© 2026 {{ profile.name|default:'MOHAMMED SINAN MANSOOR' }}.</div>
+      <!-- ── JD Match ──────────────────────────────────────────────── -->
+      <section class="section match" id="match">
+        <div class="container">
+          <div class="match-card" data-reveal>
+            <div class="match-copy">
+              <span class="eyebrow"><b>05</b> For recruiters</span>
+              <h2 class="section-title">Skip the guesswork. <span class="serif">Paste your JD.</span></h2>
+              <p class="section-sub">My AI twin reads your job description, compares it with my real experience, and gives you an honest fit score — strengths, gaps and a verdict — in seconds.</p>
+              <form id="jdForm" class="jd-form">
+                <textarea id="jdInput" rows="7" maxlength="6000" placeholder="Paste a job description here…" aria-label="Job description" data-lenis-prevent></textarea>
+                <div class="jd-actions">
+                  <button class="btn btn-primary" type="submit" id="jdSubmit" data-magnetic><span>Analyse fit</span><svg><use href="#i-spark"/></svg></button>
+                  <button class="btn-link" type="button" id="jdSample">Try a sample JD</button>
+                </div>
+              </form>
+            </div>
+            <div class="match-result" id="jdResult" aria-live="polite">
+              <div class="gauge">
+                <svg viewBox="0 0 120 120" aria-hidden="true">
+                  <circle cx="60" cy="60" r="52" class="gauge-bg" />
+                  <circle cx="60" cy="60" r="52" class="gauge-fg" id="gaugeFg" />
+                </svg>
+                <div class="gauge-value"><span id="gaugeNum">--</span><small>fit score</small></div>
+              </div>
+              <div class="jd-output" id="jdOutput" data-lenis-prevent>
+                <p class="muted">Your analysis will appear here. Nothing you paste is stored.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Hire / Freelance ──────────────────────────────────────── -->
+      <section class="section hire" id="hire">
+        <div class="container">
+          <div class="hire-top">
+            <div class="hire-head">
+              <span class="eyebrow"><b>06</b> Freelance</span>
+              <h2 class="hire-title">Got an idea?<br/><span class="serif">Let's make it intelligent.</span></h2>
+              <p class="section-sub">I help startups and businesses ship AI that actually works — chatbots, automations, custom models and full products. Fixed quotes, fast demos, real support.</p>
+            </div>
+            <aside class="quick-card" data-reveal>
+              <div class="quick-avatars"><span class="preview-avatar has-photo" style="--photo: url('{% static 'portfolio/photo-avatar.webp' %}')">{{ profile.initials }}</span><span><span class="pulse" style="display:inline-block;margin-right:8px"></span>Taking new projects</span></div>
+              <h4>Prefer a quick chat first?</h4>
+              <p>Tell me what you're building — I'll reply with ideas, not a sales pitch.</p>
+              {% if profile.whatsapp %}
+                <a class="btn btn-whatsapp" href="https://wa.me/{{ profile.whatsapp }}?text={{ 'Hi Sinan! I found your portfolio and would like to discuss a project.'|urlencode }}" target="_blank" rel="noopener" data-magnetic><svg><use href="#i-whatsapp"/></svg><span>Chat on WhatsApp</span></a>
+              {% endif %}
+              <a class="btn btn-ghost" href="mailto:{{ profile.email }}?subject={{ 'Project enquiry from your portfolio'|urlencode }}" data-magnetic><svg><use href="#i-mail"/></svg><span>Email me</span></a>
+            </aside>
+          </div>
+
+          <div class="services">
+            {% for service in services %}
+              <article class="service" data-reveal>
+                <div class="service-spot" aria-hidden="true"></div>
+                <div class="service-icon"><svg><use href="#i-{{ service.icon }}"/></svg></div>
+                <h3>{{ service.title }}</h3>
+                <p>{{ service.description }}</p>
+                <div class="tags">{% for tag in service.tags %}<span>{{ tag }}</span>{% endfor %}</div>
+              </article>
+            {% endfor %}
+          </div>
+
+          <div class="process">
+            {% for p in process %}
+              <div class="process-step" data-reveal>
+                <span class="process-num">{{ p.step }}</span>
+                <h4>{{ p.title }}</h4>
+                <p>{{ p.text }}</p>
+              </div>
+            {% endfor %}
+          </div>
+
+          <!-- Brief builder -->
+          <div class="brief" id="brief" data-reveal>
+            <div class="brief-form">
+              <h3>Build your project brief</h3>
+              <p class="muted">Pick a few options — I'll turn it into a message you can send me in one tap.</p>
+
+              <div class="field">
+                <label for="briefName">Your name</label>
+                <input id="briefName" type="text" placeholder="e.g. Priya from Acme" />
+              </div>
+              <div class="field">
+                <span class="field-label">What do you need?</span>
+                <div class="chips" data-group="services" data-multi="true">
+                  {% for option in brief_options.services %}<button type="button">{{ option }}</button>{% endfor %}
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field">
+                  <span class="field-label">Budget</span>
+                  <div class="chips" data-group="budget">
+                    {% for option in brief_options.budgets %}<button type="button">{{ option }}</button>{% endfor %}
+                  </div>
+                </div>
+                <div class="field">
+                  <span class="field-label">Timeline</span>
+                  <div class="chips" data-group="timeline">
+                    {% for option in brief_options.timelines %}<button type="button">{{ option }}</button>{% endfor %}
+                  </div>
+                </div>
+              </div>
+              <div class="field">
+                <label for="briefDetails">Tell me about it</label>
+                <textarea id="briefDetails" rows="3" placeholder="A WhatsApp bot that answers customer questions from our product catalogue…" data-lenis-prevent></textarea>
+              </div>
+            </div>
+
+            <div class="brief-preview">
+              <div class="preview-phone">
+                <div class="preview-head">
+                  <span class="preview-avatar has-photo" style="--photo: url('{% static 'portfolio/photo-avatar.webp' %}')">{{ profile.initials }}</span>
+                  <div><b>{{ profile.name }}</b><small>usually replies within a few hours</small></div>
+                </div>
+                <div class="preview-body" data-lenis-prevent>
+                  <div class="preview-bubble" id="briefPreview"></div>
+                </div>
+              </div>
+              <div class="brief-actions">
+                {% if profile.whatsapp %}
+                  <a class="btn btn-whatsapp" id="briefWhatsapp" href="https://wa.me/{{ profile.whatsapp }}" target="_blank" rel="noopener" data-magnetic>
+                    <svg><use href="#i-whatsapp"/></svg><span>Send on WhatsApp</span>
+                  </a>
+                {% endif %}
+                <a class="btn btn-primary" id="briefGmail" href="mailto:{{ profile.email }}" target="_blank" rel="noopener" data-magnetic>
+                  <svg><use href="#i-mail"/></svg><span>Send via Gmail</span>
+                </a>
+                <button class="btn-link" type="button" id="briefCopy"><svg><use href="#i-copy"/></svg> Copy message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Contact ───────────────────────────────────────────────── -->
+      <footer class="contact" id="contact">
+        <div class="container">
+          <p class="eyebrow"><b>07</b> Contact</p>
+          <a class="contact-big" href="mailto:{{ profile.email }}" data-cursor="Say hi">
+            <span class="contact-line">Let's build</span>
+            <span class="contact-line serif">something smart.</span>
+          </a>
+          <div class="contact-row">
+            <button class="contact-chip" type="button" data-copy="{{ profile.email }}" data-cursor="Copy">
+              <svg><use href="#i-mail"/></svg>{{ profile.email }}<svg class="small"><use href="#i-copy"/></svg>
+            </button>
+            {% if profile.whatsapp %}
+              <a class="contact-chip" href="https://wa.me/{{ profile.whatsapp }}" target="_blank" rel="noopener"><svg><use href="#i-whatsapp"/></svg>WhatsApp</a>
+            {% endif %}
+            <a class="contact-chip" href="{{ profile.linkedin_url }}" target="_blank" rel="noopener"><svg><use href="#i-linkedin"/></svg>LinkedIn</a>
+            <a class="contact-chip" href="{{ profile.github_url }}" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg>GitHub</a>
+            <a class="contact-chip" href="{{ profile.resume_url }}" target="_blank" rel="noopener"><svg><use href="#i-file"/></svg>Resume</a>
+          </div>
+          <div class="footer-bottom">
+            <span>© 2026 {{ profile.name }}</span>
+            <span class="mono">{{ profile.location }} · <span id="localTime">--:--</span> IST</span>
+            <span class="muted">Press <kbd class="mod-key">⌘</kbd><kbd>K</kbd> anywhere</span>
+          </div>
+        </div>
       </footer>
-    </div>
+    </main>
 
-    <script src="{% static 'portfolio/app.js' %}"></script>
+    {% if profile.whatsapp %}
+      <a class="fab-whatsapp" href="https://wa.me/{{ profile.whatsapp }}?text={{ 'Hi Sinan! I found your portfolio and would like to discuss a project.'|urlencode }}" target="_blank" rel="noopener" aria-label="Chat on WhatsApp" data-cursor="Chat">
+        <svg><use href="#i-whatsapp"/></svg>
+      </a>
+    {% endif %}
+
+    <!-- ── Project modal ───────────────────────────────────────────── -->
+    <dialog class="modal" id="projectModal" aria-labelledby="modalTitle">
+      <div class="modal-inner" data-lenis-prevent>
+        <button class="icon-btn modal-close" id="modalClose" type="button" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+        <span class="eyebrow" id="modalCat"></span>
+        <h3 id="modalTitle"></h3>
+        <div class="modal-metric"><strong id="modalMetric"></strong><span id="modalMetricLabel"></span></div>
+        <div class="modal-cols">
+          <div><h4>The problem</h4><p id="modalProblem"></p></div>
+          <div><h4>The approach</h4><p id="modalApproach"></p></div>
+          <div><h4>The impact</h4><p id="modalImpact"></p></div>
+        </div>
+        <div class="tags" id="modalTags"></div>
+        <div class="modal-actions">
+          <button class="btn btn-primary" type="button" id="modalAsk"><span>Ask my AI twin about this</span><svg><use href="#i-spark"/></svg></button>
+          <a class="btn btn-ghost" href="{{ profile.github_url }}" target="_blank" rel="noopener"><svg><use href="#i-github"/></svg><span>GitHub</span></a>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- ── Command palette ─────────────────────────────────────────── -->
+    <dialog class="palette" id="palette" aria-label="Command palette">
+      <div class="palette-inner">
+        <input id="paletteInput" type="text" placeholder="Type a command or search…" aria-label="Search commands" autocomplete="off" />
+        <ul id="paletteList" role="listbox" data-lenis-prevent></ul>
+        <div class="palette-foot"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> select</span><span><kbd>esc</kbd> close</span></div>
+      </div>
+    </dialog>
+
+    <canvas class="confetti" id="confetti" aria-hidden="true"></canvas>
+
+    {{ site_data|json_script:"site-data" }}
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js" defer></script>
+    <script src="{% static 'portfolio/app.js' %}" defer></script>
   </body>
 </html>

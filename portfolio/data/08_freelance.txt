@@ -1,0 +1,24 @@
+FREELANCE SERVICES — Mohammed Sinan Mansoor
+
+Sinan takes on freelance and contract projects alongside his job search.
+Clients can reach him through the "Hire me" section of this website, by WhatsApp,
+or by email at sinanmansooor@gmail.com.
+
+Services offered:
+- AI chatbots and RAG assistants trained on a business's documents, website, or product
+  (like the assistant on this portfolio)
+- AI agents and workflow automation (emails, spreadsheets, lead qualification, repetitive tasks)
+- Custom machine learning models: prediction, classification, forecasting
+- Computer vision: detection, recognition, video analytics, quality inspection
+- AI-powered web apps and REST APIs built with Django, from MVP to deployment
+- Voice and NLP solutions: speech-to-text, text-to-speech, multilingual assistants
+  including Indian languages
+
+How a freelance project works:
+1. Discover — a quick call or chat to understand the problem, data, and goals
+2. Propose — a clear plan, timeline, and fixed quote within 24 hours
+3. Build — short iterations with working demos every few days
+4. Ship & Support — deployment, handover, documentation, and post-launch support
+
+Pricing: every project gets a fixed quote after the discovery chat; there are no fixed
+public prices. Clients can share their budget range in the project brief on the website.

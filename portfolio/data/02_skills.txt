@@ -5,6 +5,7 @@ Programming Languages:
 - SQL
 - JavaScript
 - HTML, CSS
+- React (frontend framework)
 - C, C++
 
 AI / Machine Learning:
