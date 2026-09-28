@@ -21,3 +21,6 @@ media/
 # OS/editor
 .DS_Store
 .vscode/
+
+.vercel
+.env*
