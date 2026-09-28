@@ -25,3 +25,6 @@ media/
 .vercel
 .env*
 !.env.example
+
+# Original photo (optimised copies live in portfolio/static/portfolio/)
+/photo.jpeg

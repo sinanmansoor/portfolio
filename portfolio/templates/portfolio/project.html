@@ -1,0 +1,95 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}{{ project.title }} — Case study · {{ profile.name }}{% endblock %}
+{% block description %}{{ project.summary }} A case study by {{ profile.name }}, AI Engineer.{% endblock %}
+{% block og_title %}{{ project.title }} — {{ profile.name }}{% endblock %}
+
+{% block content %}
+  <article class="case" style="--p: {{ project.accent }}">
+    <!-- Hero -->
+    <header class="case-hero">
+      <div class="case-bg" aria-hidden="true"></div>
+      <div class="container">
+        <a class="case-back" href="/#work" data-cursor="Back"><svg><use href="#i-back"/></svg> All work</a>
+        <div class="case-hero-grid">
+          <div>
+            <span class="eyebrow"><b>{{ number|stringformat:"02d" }} / 05</b><span class="eb-text">{{ project.category }}</span></span>
+            <h1 class="case-title" data-split>{{ project.title }}</h1>
+            <p class="case-summary" data-hero>{{ project.summary }}</p>
+            <div class="case-actions" data-hero>
+              {% if project.repo_url %}
+                <a class="btn btn-primary" href="{{ project.repo_url }}" target="_blank" rel="noopener" data-magnetic><svg><use href="#i-github"/></svg><span>View the code</span></a>
+              {% endif %}
+              <button class="btn {% if project.repo_url %}btn-ghost{% else %}btn-primary{% endif %}" type="button" data-ask="Walk me through the {{ project.title }} project — the problem, how it was built, and the result." data-magnetic><svg><use href="#i-spark"/></svg><span>Ask my AI twin about it</span></button>
+              <a class="btn-link" href="/hire/"><span>Want one like this? Hire me</span><svg><use href="#i-arrow"/></svg></a>
+            </div>
+          </div>
+          <div class="case-visual" data-hero aria-hidden="true">
+            <div class="viz viz-{{ number }}">{% for i in "123456789012" %}<i></i>{% endfor %}</div>
+            <div class="case-metric">
+              <strong data-scramble>{{ project.metric }}</strong>
+              <span>{{ project.metric_label }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Story -->
+    <section class="section case-story">
+      <div class="container">
+        <div class="story-row" data-reveal>
+          <div class="story-label"><span class="mono">01</span><h2>The problem</h2></div>
+          <p class="story-text">{{ project.problem }}</p>
+        </div>
+        <div class="story-row" data-reveal>
+          <div class="story-label"><span class="mono">02</span><h2>The approach</h2></div>
+          <p class="story-text">{{ project.approach }}</p>
+        </div>
+        <div class="story-row" data-reveal>
+          <div class="story-label"><span class="mono">03</span><h2>The impact</h2></div>
+          <p class="story-text story-impact">{{ project.impact }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pipeline -->
+    <section class="section case-pipeline">
+      <div class="container">
+        <span class="eyebrow"><b>⚙</b><span class="eb-text">How it works</span></span>
+        <h2 class="section-title">The <span class="serif grad-text">pipeline.</span></h2>
+        <ol class="pipeline" id="pipeline">
+          {% for step in project.steps %}
+            <li class="pipe-step" style="--i: {{ forloop.counter0 }}">
+              <span class="pipe-num mono">{{ forloop.counter|stringformat:"02d" }}</span>
+              <span class="pipe-name">{{ step }}</span>
+              {% if not forloop.last %}<span class="pipe-link" aria-hidden="true"><i></i><i></i><i></i></span>{% endif %}
+            </li>
+          {% endfor %}
+        </ol>
+      </div>
+    </section>
+
+    <!-- Stack -->
+    <section class="section case-stack">
+      <div class="container case-stack-grid">
+        <div>
+          <span class="eyebrow"><b>⌘</b><span class="eb-text">Stack</span></span>
+          <h2 class="section-title">Built <span class="serif grad-text">with.</span></h2>
+        </div>
+        <div class="stack-chips">
+          {% for tech in project.technologies %}<span data-reveal>{{ tech }}</span>{% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <!-- Next -->
+    <a class="case-next" href="/work/{{ next_project.slug }}/" style="--p: {{ next_project.accent }}" data-cursor="Next">
+      <div class="container">
+        <span class="mono muted">Next project</span>
+        <span class="case-next-title">{{ next_project.title }} <svg><use href="#i-arrow"/></svg></span>
+        <span class="muted">{{ next_project.summary }}</span>
+      </div>
+    </a>
+  </article>
+{% endblock %}

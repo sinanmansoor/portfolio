@@ -1,0 +1,16 @@
+{% load static %}<aside class="quick-card" data-reveal>
+  <div class="quick-avatars">
+    <span class="preview-avatar has-photo" style="--photo: url('{% static 'portfolio/photo-avatar.webp' %}')">{{ profile.initials }}</span>
+    <span><span class="pulse"></span>Taking new projects</span>
+  </div>
+  <h4>Prefer a quick chat first?</h4>
+  <p>Tell me what you're building — I'll reply with ideas, not a sales pitch.</p>
+  {% if profile.whatsapp %}
+    <a class="btn btn-whatsapp" href="https://wa.me/{{ profile.whatsapp }}?text={{ 'Hi Sinan! I found your portfolio and would like to discuss a project.'|urlencode }}" target="_blank" rel="noopener" data-magnetic><svg><use href="#i-whatsapp"/></svg><span>Chat on WhatsApp</span></a>
+  {% endif %}
+  {% if page == "hire" %}
+    <a class="btn btn-ghost" href="mailto:{{ profile.email }}?subject={{ 'Project enquiry from your portfolio'|urlencode }}" data-magnetic><svg><use href="#i-mail"/></svg><span>Email me</span></a>
+  {% else %}
+    <a class="btn btn-ghost" href="/hire/" data-magnetic><span>Services &amp; project brief</span><svg><use href="#i-arrow"/></svg></a>
+  {% endif %}
+</aside>

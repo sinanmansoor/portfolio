@@ -16,9 +16,10 @@ Services offered:
 
 How a freelance project works:
 1. Discover — a quick call or chat to understand the problem, data, and goals
-2. Propose — a clear plan, timeline, and fixed quote within 24 hours
+2. Propose — a clear plan, timeline, and quote before any work starts
 3. Build — short iterations with working demos every few days
 4. Ship & Support — deployment, handover, documentation, and post-launch support
 
-Pricing: every project gets a fixed quote after the discovery chat; there are no fixed
-public prices. Clients can share their budget range in the project brief on the website.
+Pricing: every project is scoped first; there are no fixed public prices. Clients can enter
+their own budget in the project brief on the website, or choose "Let's discuss" to work it out together.
+WhatsApp: +91 97469 51354. Freelance page: /hire/

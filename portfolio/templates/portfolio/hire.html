@@ -1,0 +1,169 @@
+{% extends "portfolio/base.html" %}
+{% load static %}
+
+{% block title %}Hire {{ profile.name }} — Freelance AI & full-stack developer{% endblock %}
+{% block description %}Freelance AI engineer: AI chatbots, agents and automation, custom ML and computer vision, and full-stack React + Django apps. Build a project brief and send it on WhatsApp or email in one tap.{% endblock %}
+{% block og_title %}Hire {{ profile.name }} — Freelance AI developer{% endblock %}
+
+{% block content %}
+  <!-- Hero -->
+  <section class="hire-hero">
+    <canvas class="neural" id="neural" aria-hidden="true"></canvas>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hire-top">
+        <div class="hire-head">
+          <span class="eyebrow" data-hero><b>✦</b><span class="eb-text">Freelance · Remote</span></span>
+          <h1 class="hire-title" data-split>Got an idea? <span class="serif grad-text">Let's make it intelligent.</span></h1>
+          <p class="section-sub" data-hero>I help startups and businesses ship AI that actually works — chatbots, agents, custom models and full-stack products with React and Django. Clear scope, working demos, real support.</p>
+          <div class="hero-cta" data-hero>
+            <a class="btn btn-primary" href="#brief" data-magnetic><span>Build your project brief</span><svg><use href="#i-arrow"/></svg></a>
+            <a class="btn btn-ghost" href="#services" data-magnetic><span>See services</span></a>
+          </div>
+        </div>
+        {% include "portfolio/_quick_card.html" %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services">
+    <div class="container">
+      <span class="eyebrow"><b>01</b><span class="eb-text">Services</span></span>
+      <h2 class="section-title">What I can <span class="serif grad-text">build for you.</span></h2>
+      <div class="services">
+        {% for service in services %}
+          <article class="service" data-reveal>
+            <div class="service-spot" aria-hidden="true"></div>
+            <div class="service-icon"><svg><use href="#i-{{ service.icon }}"/></svg></div>
+            <h3>{{ service.title }}</h3>
+            <p>{{ service.description }}</p>
+            <div class="tags">{% for tag in service.tags %}<span>{{ tag }}</span>{% endfor %}</div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Proof -->
+  <section class="section proof">
+    <div class="container">
+      <span class="eyebrow"><b>02</b><span class="eb-text">Proof</span></span>
+      <h2 class="section-title">Shipped, <span class="serif grad-text">not just prototyped.</span></h2>
+      <div class="proof-grid">
+        {% for p in nav_projects|slice:":3" %}
+          <a class="proof-card" href="/work/{{ p.slug }}/" style="--p: {{ p.accent }}" data-reveal data-cursor="Open">
+            <strong>{{ p.metric }}</strong>
+            <span class="mono muted">{{ p.metric_label }}</span>
+            <h3>{{ p.title }}</h3>
+            <p>{{ p.summary }}</p>
+            <span class="project-open">Case study <svg><use href="#i-arrow-up"/></svg></span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section">
+    <div class="container">
+      <span class="eyebrow"><b>03</b><span class="eb-text">Process</span></span>
+      <h2 class="section-title">Simple, <span class="serif grad-text">transparent.</span></h2>
+      <div class="process">
+        {% for p in process %}
+          <div class="process-step" data-reveal>
+            <span class="process-num">{{ p.step }}</span>
+            <h4>{{ p.title }}</h4>
+            <p>{{ p.text }}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- Brief builder -->
+  <section class="section brief-section" id="brief">
+    <div class="container">
+      <div class="brief" data-reveal>
+        <div class="brief-form">
+          <span class="eyebrow"><b>04</b><span class="eb-text">Project brief</span></span>
+          <h3>Build your project brief</h3>
+          <p class="muted">Pick a few options — I'll turn it into a message you can send me in one tap.</p>
+
+          <div class="field">
+            <label for="briefName">Your name</label>
+            <input id="briefName" type="text" placeholder="e.g. Priya from Acme" autocomplete="name" />
+          </div>
+          <div class="field">
+            <span class="field-label">What do you need?</span>
+            <div class="chips" data-group="services" data-multi="true">
+              {% for option in brief_options.services %}<button type="button">{{ option }}</button>{% endfor %}
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="briefBudget">Budget</label>
+              <div class="budget-field">
+                <input id="briefBudget" type="text" inputmode="text" placeholder="e.g. ₹40,000 or $500" maxlength="40" />
+                <span class="budget-or">or</span>
+                <div class="chips" data-group="discuss"><button type="button">Let's discuss</button></div>
+              </div>
+            </div>
+            <div class="field">
+              <span class="field-label">Timeline</span>
+              <div class="chips" data-group="timeline">
+                {% for option in brief_options.timelines %}<button type="button">{{ option }}</button>{% endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label for="briefDetails">Tell me about it</label>
+            <textarea id="briefDetails" rows="3" placeholder="A WhatsApp bot that answers customer questions from our product catalogue…" data-lenis-prevent></textarea>
+          </div>
+        </div>
+
+        <div class="brief-preview">
+          <div class="preview-phone">
+            <div class="preview-head">
+              <span class="preview-avatar has-photo" style="--photo: url('{% static 'portfolio/photo-avatar.webp' %}')">{{ profile.initials }}</span>
+              <div><b>{{ profile.name }}</b><small>Your message preview</small></div>
+            </div>
+            <div class="preview-body" data-lenis-prevent>
+              <div class="preview-bubble" id="briefPreview"></div>
+            </div>
+          </div>
+          <div class="brief-actions">
+            {% if profile.whatsapp %}
+              <a class="btn btn-whatsapp" id="briefWhatsapp" href="https://wa.me/{{ profile.whatsapp }}" target="_blank" rel="noopener" data-magnetic>
+                <svg><use href="#i-whatsapp"/></svg><span>Send on WhatsApp</span>
+              </a>
+            {% endif %}
+            <a class="btn btn-primary" id="briefGmail" href="mailto:{{ profile.email }}" target="_blank" rel="noopener" data-magnetic>
+              <svg><use href="#i-mail"/></svg><span>Send via Gmail</span>
+            </a>
+            <button class="btn-link" type="button" id="briefCopy"><svg><use href="#i-copy"/></svg> Copy message</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section faq">
+    <div class="container faq-grid">
+      <div>
+        <span class="eyebrow"><b>05</b><span class="eb-text">FAQ</span></span>
+        <h2 class="section-title">Good <span class="serif grad-text">questions.</span></h2>
+        <p class="section-sub">Something else on your mind? Ask my AI twin — bottom right — or message me directly.</p>
+      </div>
+      <div class="faq-list">
+        {% for item in faq %}
+          <details class="faq-item" data-reveal>
+            <summary><span>{{ item.q }}</span><i aria-hidden="true"><svg><use href="#i-plus"/></svg></i></summary>
+            <div class="faq-answer"><p>{{ item.a }}</p></div>
+          </details>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -6,7 +6,8 @@ Contact Details:
 Email: sinanmansooor@gmail.com
 LinkedIn: linkedin.com/in/sinanmansoor
 GitHub: github.com/sinanmansoor
-Location: Bangalore, India
+Location: Kannur, Kerala, India — open to relocation
+WhatsApp: +91 97469 51354
 
 ---
 
@@ -30,4 +31,4 @@ How to reach Sinan:
 For recruiters:
 Sinan is open to discussing AI Engineer, ML Engineer, and Python Developer opportunities.
 He brings production AI experience, deep learning expertise, and strong Python and Django
-skills. Based in Bangalore, India. Available for interviews immediately.
+skills. Based in Kannur, Kerala and open to relocating for the right role. Available for interviews immediately.

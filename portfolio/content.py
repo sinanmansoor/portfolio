@@ -15,16 +15,17 @@ PROFILE = {
         "who builds the product around the model with React and Django. I ship AI that is useful, "
         "measurable, and reliable in production."
     ),
-    "location": "Bangalore, India",
+    "location": "Kannur, Kerala",
+    "relocation": "Open to relocation",
     "timezone": "Asia/Kolkata",
     "email": "sinanmansooor@gmail.com",
     # International format, digits only (e.g. "919876543210"). Leave empty to
     # hide every WhatsApp button on the site.
-    "whatsapp": "",
+    "whatsapp": "919746951354",
     "github_url": "https://github.com/sinanmansoor",
     "linkedin_url": "https://linkedin.com/in/sinanmansoor",
     "resume_url": "/static/RESUME.pdf",
-    "availability": "Open to AI Engineer roles & freelance projects",
+    "availability": "Open to AI Engineer roles · relocation · freelance",
     "roles": ["AI Engineer", "Agentic AI Developer", "Full-Stack Dev · React + Django", "LLM & RAG Builder", "Software Engineer"],
 }
 
@@ -82,7 +83,9 @@ PROJECTS = [
         "metric": "5-step",
         "metric_label": "LLM pipeline",
         "technologies": ["Python", "Django", "REST API", "LLaMA-3.3-70B", "JavaScript"],
-        "accent": "#d4ff3f",
+        "accent": "#8b7dff",
+        "repo_url": "",
+        "steps": ["Candidate profile", "Role-fit scoring", "Skill-gap detection", "Recommendations", "ATS resume (LLaMA-3.3-70B)"],
         "featured": True,
     },
     {
@@ -96,7 +99,9 @@ PROJECTS = [
         "metric": "+20%",
         "metric_label": "vs unimodal",
         "technologies": ["TensorFlow", "Keras", "Transformers", "OpenCV", "Audio ML"],
-        "accent": "#9b8cff",
+        "accent": "#c084fc",
+        "repo_url": "",
+        "steps": ["Audio stream", "Video stream", "Feature extraction", "Transformer fusion", "Emotion class"],
         "featured": True,
     },
     {
@@ -110,7 +115,9 @@ PROJECTS = [
         "metric": "~500",
         "metric_label": "active users",
         "technologies": ["Python", "NLP", "ASR", "TTS", "Speech Recognition"],
-        "accent": "#3fffd1",
+        "accent": "#22d3ee",
+        "repo_url": "",
+        "steps": ["Farmer speaks", "ASR (speech → text)", "NLP understanding", "Agri data lookup", "TTS answer"],
         "featured": True,
     },
     {
@@ -124,7 +131,9 @@ PROJECTS = [
         "metric": "97%",
         "metric_label": "accuracy",
         "technologies": ["scikit-learn", "Random Forest", "Pandas", "Cross-validation"],
-        "accent": "#ff7a59",
+        "accent": "#fb923c",
+        "repo_url": "https://github.com/sinanmansoor/intrusion-detection-using-ml",
+        "steps": ["Network traffic", "Feature engineering", "Random Forest", "Cross-validation", "Intrusion alert"],
         "featured": True,
     },
     {
@@ -138,7 +147,9 @@ PROJECTS = [
         "metric": "89%",
         "metric_label": "7-class accuracy",
         "technologies": ["OpenCV", "Neural Networks", "Python", "Computer Vision"],
-        "accent": "#ff5fa2",
+        "accent": "#f472b6",
+        "repo_url": "https://github.com/sinanmansoor/EMOTION-DETECTION-MUSIC-PLAYER",
+        "steps": ["Webcam frame", "Face detection (OpenCV)", "Emotion network · 7 classes", "Playlist engine", "Music plays"],
         "featured": True,
     },
 ]
@@ -232,13 +243,36 @@ SERVICES = [
 
 PROCESS = [
     {"step": "01", "title": "Discover", "text": "A quick call or chat to understand the problem, the data, and what success looks like."},
-    {"step": "02", "title": "Propose", "text": "A clear plan, timeline, and fixed quote within 24 hours — no surprises."},
+    {"step": "02", "title": "Propose", "text": "A clear plan, timeline, and quote before any work starts — no surprises."},
     {"step": "03", "title": "Build", "text": "Short iterations with working demos so you see progress every few days."},
     {"step": "04", "title": "Ship & Support", "text": "Deployment, handover, documentation, and support after launch."},
 ]
 
 BRIEF_OPTIONS = {
     "services": ["AI Chatbot", "AI Agent / Automation", "ML Model", "Computer Vision", "Web App", "Voice / NLP", "Something else"],
-    "budgets": ["< ₹25k", "₹25k – ₹75k", "₹75k – ₹2L", "₹2L+", "Not sure yet"],
     "timelines": ["ASAP", "2–4 weeks", "1–2 months", "Flexible"],
 }
+
+# Freelance FAQ (hire page). Keep answers to things you actually commit to.
+FAQ = [
+    {
+        "q": "What kind of projects do you take on?",
+        "a": "AI chatbots and assistants, AI agents and automations, custom ML and computer-vision models, and full-stack web apps built with React and Django — from a first prototype to a deployed product.",
+    },
+    {
+        "q": "How is pricing decided?",
+        "a": "Every project is scoped first. Share your budget in the brief, or pick “Let's discuss” and we'll work out a plan that fits it together.",
+    },
+    {
+        "q": "Do you work remotely?",
+        "a": "Yes. Freelance projects run remotely over WhatsApp, email and video calls, with regular demos so you always see progress.",
+    },
+    {
+        "q": "Can you work with our existing product or stack?",
+        "a": "Usually, yes. I can add AI features to an existing app or API, or build a new service alongside it. Tell me what you use in the brief.",
+    },
+    {
+        "q": "What do you need from me to get started?",
+        "a": "A short description of the problem, any data or documents involved, and what success looks like. The brief builder on this page covers it in a minute.",
+    },
+]

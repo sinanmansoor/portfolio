@@ -1,0 +1,18 @@
+{% extends "portfolio/base.html" %}
+
+{% block title %}404 — Page not found · {{ profile.name }}{% endblock %}
+
+{% block content %}
+  <section class="lost">
+    <canvas class="neural" id="neural" aria-hidden="true"></canvas>
+    <div class="container lost-inner">
+      <p class="eyebrow"><b>ERR</b><span class="eb-text">Model output: null</span></p>
+      <h1 class="lost-code" data-glitch="404">404</h1>
+      <p class="lost-text">This page drifted out of the training data.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/" data-magnetic><svg><use href="#i-back"/></svg><span>Back home</span></a>
+        <a class="btn btn-ghost" href="/#work" data-magnetic><span>See my work</span></a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

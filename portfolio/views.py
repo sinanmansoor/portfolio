@@ -2,7 +2,7 @@ import json
 import logging
 from urllib.parse import unquote
 
-from django.http import JsonResponse, StreamingHttpResponse
+from django.http import Http404, JsonResponse, StreamingHttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
@@ -11,6 +11,7 @@ from .ai import ask
 from .content import (
     BRIEF_OPTIONS,
     EXPERIENCES,
+    FAQ,
     PROCESS,
     PROFILE,
     PROJECTS,
@@ -23,9 +24,28 @@ from .notify import send_alert
 
 logger = logging.getLogger(__name__)
 
+FEATURED = [p for p in PROJECTS if p["featured"]]
+
 
 def _sorted_skills():
     return sorted(SKILLS, key=lambda s: (s["category"], s["name"]))
+
+
+def _base_context(**extra):
+    """Context every page needs: profile, and the data app.js reads."""
+    return {
+        "profile": PROFILE,
+        "stats": STATS,
+        "nav_projects": FEATURED,
+        "site_data": {
+            "profile": PROFILE,
+            "projects": PROJECTS,
+            "skills": SKILLS,
+            "experiences": EXPERIENCES,
+            "services": [s["title"] for s in SERVICES],
+        },
+        **extra,
+    }
 
 
 @require_GET
@@ -33,26 +53,45 @@ def home(request):
     return render(
         request,
         "portfolio/index.html",
-        {
-            "profile": PROFILE,
-            "stats": STATS,
-            "projects": [p for p in PROJECTS if p["featured"]],
-            "skills": _sorted_skills(),
-            "skill_orbits": SKILL_ORBITS,
-            "experiences": EXPERIENCES,
-            "services": SERVICES,
-            "process": PROCESS,
-            "brief_options": BRIEF_OPTIONS,
-            # Consumed by app.js (terminal, command palette, brief builder).
-            "site_data": {
-                "profile": PROFILE,
-                "projects": PROJECTS,
-                "skills": SKILLS,
-                "experiences": EXPERIENCES,
-                "services": [s["title"] for s in SERVICES],
-            },
-        },
+        _base_context(
+            page="home",
+            projects=FEATURED,
+            skills=_sorted_skills(),
+            skill_orbits=SKILL_ORBITS,
+            experiences=EXPERIENCES,
+            services=SERVICES[:3],
+        ),
     )
+
+
+@require_GET
+def project_detail(request, slug):
+    index = next((i for i, p in enumerate(FEATURED) if p["slug"] == slug), None)
+    if index is None:
+        raise Http404("Project not found")
+    return render(
+        request,
+        "portfolio/project.html",
+        _base_context(
+            page="project",
+            project=FEATURED[index],
+            number=index + 1,
+            next_project=FEATURED[(index + 1) % len(FEATURED)],
+        ),
+    )
+
+
+@require_GET
+def hire(request):
+    return render(
+        request,
+        "portfolio/hire.html",
+        _base_context(page="hire", services=SERVICES, process=PROCESS, brief_options=BRIEF_OPTIONS, faq=FAQ),
+    )
+
+
+def not_found(request, exception=None):
+    return render(request, "portfolio/404.html", _base_context(page="404"), status=404)
 
 
 def _describe_device(user_agent: str) -> str:
