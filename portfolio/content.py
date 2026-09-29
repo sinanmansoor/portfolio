@@ -25,15 +25,15 @@ PROFILE = {
     "github_url": "https://github.com/sinanmansoor",
     "linkedin_url": "https://www.linkedin.com/in/sinanmansoor/",
     "resume_url": "/static/RESUME.pdf",
-    "availability": "Open to AI Engineer roles · relocation · freelance",
+    "availability": "Full-stack & AI engineer at KIF-X · open to roles & freelance",
     "roles": ["AI Engineer", "Agentic AI Developer", "Full-Stack Dev · React + Django", "LLM & RAG Builder", "Software Engineer"],
 }
 
 STATS = [
+    {"value": 10, "suffix": "+", "label": "Client projects shipped for UAE businesses"},
     {"value": 97, "suffix": "%", "label": "Intrusion detection accuracy"},
     {"value": 500, "suffix": "+", "label": "Farmers served by Agri Bot", "prefix": "~"},
     {"value": 10, "suffix": "%", "label": "IIT Kharagpur national rank", "prefix": "Top "},
-    {"value": 40, "suffix": "%", "label": "Manual effort cut at NIT Calicut"},
 ]
 
 SKILLS = [
@@ -59,6 +59,9 @@ SKILLS = [
     {"category": "Frontend", "name": "React", "proficiency": 85},
     {"category": "Frontend", "name": "JavaScript", "proficiency": 86},
     {"category": "Frontend", "name": "HTML / CSS", "proficiency": 86},
+    {"category": "DevOps", "name": "Docker", "proficiency": 82},
+    {"category": "DevOps", "name": "CI/CD", "proficiency": 80},
+    {"category": "DevOps", "name": "Cloud Deployment", "proficiency": 80},
     {"category": "Tools", "name": "Git", "proficiency": 90},
     {"category": "Tools", "name": "Linux", "proficiency": 84},
     {"category": "Tools", "name": "Jupyter", "proficiency": 88},
@@ -68,7 +71,7 @@ SKILLS = [
 SKILL_ORBITS = [
     ["Python", "TensorFlow", "Transformers", "LLMs"],
     ["NLP", "Computer Vision", "RAG", "Django", "scikit-learn", "OpenCV"],
-    ["Agentic AI", "LangChain", "React", "REST APIs", "Keras", "Pandas", "SQL", "Git"],
+    ["Agentic AI", "LangChain", "React", "REST APIs", "Docker", "CI/CD", "SQL", "Git"],
 ]
 
 PROJECTS = [
@@ -155,6 +158,19 @@ PROJECTS = [
 ]
 
 EXPERIENCES = [
+    {
+        "kind": "Current role",
+        "role": "Full-Stack Developer · Software Engineer · AI Engineer",
+        "company": "KIF-X Software Solutions",
+        "period": "Present",
+        "location": "Thalassery, Kerala · UAE clients",
+        "description": "Software arm of KIF Consultancy, Dubai. I own projects end to end for UAE-based clients — full-stack web apps, custom software and AI features — from building to deploying them in production.",
+        "highlights": [
+            "Delivered 10+ client projects, with new ones in progress",
+            "Full-stack development plus AI features across web apps and custom software",
+            "Deployments end to end: Docker, CI/CD pipelines and cloud services",
+        ],
+    },
     {
         "kind": "Experience",
         "role": "Machine Learning Research Intern",

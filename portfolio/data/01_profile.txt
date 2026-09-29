@@ -9,6 +9,9 @@ LinkedIn: https://www.linkedin.com/in/sinanmansoor/
 GitHub: github.com/sinanmansoor
 Graduation Year: 2026
 
+Current job: Full-Stack Developer, Software Engineer and AI Engineer at KIF-X Software Solutions
+(part of KIF Consultancy, Dubai), working from Thalassery on projects for UAE clients; 10+ projects delivered.
+
 Professional Summary:
 AI Engineer and Python Developer (2026 graduate) skilled in machine learning model training,
 model deployment, data science, NLP, computer vision, and deep learning. Built

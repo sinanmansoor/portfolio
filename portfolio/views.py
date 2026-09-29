@@ -96,13 +96,13 @@ def resume(request):
     groups = {}
     for skill in _sorted_skills():
         groups.setdefault(skill["category"], []).append(skill["name"])
-    labels = {"AI": "AI & LLMs", "Data": "ML & Data", "Backend": "Backend", "Frontend": "Frontend", "Tools": "Tools"}
+    labels = {"AI": "AI & LLMs", "Data": "ML & Data", "Backend": "Backend", "Frontend": "Frontend", "DevOps": "DevOps & Cloud", "Tools": "Tools"}
     return render(
         request,
         "portfolio/resume.html",
         _base_context(
             page="resume",
-            work=[e for e in EXPERIENCES if e["kind"] in {"Experience", "Residency"}],
+            work=[e for e in EXPERIENCES if e["kind"] in {"Current role", "Experience", "Residency"}],
             education=[e for e in EXPERIENCES if e["kind"] in {"Education", "Certification"}],
             projects=FEATURED,
             skill_groups=[(labels.get(cat, cat), names) for cat, names in groups.items()],

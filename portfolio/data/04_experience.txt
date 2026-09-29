@@ -2,6 +2,24 @@ WORK EXPERIENCE — Mohammed Sinan Mansoor
 
 ---
 
+Role: Full-Stack Web Developer, Software Engineer and AI Engineer (current job)
+Company: KIF-X Software Solutions — the software company of KIF Consultancy, headquartered in Dubai, UAE
+Location: Thalassery, Kerala, India, working on projects for UAE-based clients
+Period: Present (currently employed here)
+
+Description:
+Sinan handles every kind of work at KIF-X: full-stack web development, custom software,
+and AI engineering for UAE-based clients.
+
+Key Achievements and Responsibilities:
+- Has worked on more than 10 client projects and is continuously working on new ones
+- Builds full-stack web applications and custom software for clients
+- Adds AI features and solutions to client projects
+- Handles deployment of projects end to end
+- Uses Docker, CI/CD pipelines and cloud services for deployment
+
+---
+
 Role: Machine Learning Research Intern
 Company: National Institute of Technology (NIT) Calicut
 Location: Kerala, India

@@ -38,6 +38,12 @@ Frameworks and Backend:
 - Streamlit
 - Gunicorn
 
+DevOps and Deployment:
+- Docker
+- CI/CD pipelines
+- Cloud services and cloud deployment
+- Deploying projects to production end to end
+
 Data and Tools:
 - Pandas
 - NumPy
